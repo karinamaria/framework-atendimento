@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html  lang="pt-br" xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:th="http://www.thymeleaf.org"
+       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+       layout:decorator="~{fragments/layout_principal}">
+<head>
+    <meta charset="UTF-8">
+    <title>Nome do site</title>
+
+</head>
+
+<body class="bg-light">
+<th:block layout:fragment="content">
+    <!-- ======= Hero Section ======= -->
+    <section id="hero" class="hero d-flex align-items-center">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 d-flex flex-column justify-content-center">
+                    <h1 data-aos="fade-up">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</h1>
+                    <h2 data-aos="fade-up" data-aos-delay="400">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</h2>
+                </div>
+                <div class="col-lg-6 hero-img" data-aos="zoom-out" data-aos-delay="200">
+                    <img src="/img/logo2.png" class="img-fluid" alt="">
+                </div>
+            </div>
+        </div>
+
+    </section><!-- End Hero -->
+
+    <section id="about" class="about">
+
+        <div class="container" data-aos="fade-up">
+            <div class="row gx-0">
+
+                <div class="col-lg-6 d-flex flex-column justify-content-center" data-aos="fade-up" data-aos-delay="200">
+                    <div class="content">
+                        <h3>Lorem Ipsum</h3>
+                        <h2>Lorem Ipsum is simply dummy text of the printing and typesetting industry..</h2>
+                        <p>
+                            Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.
+                        </p>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </section><!-- End About Section -->
+
+</th:block>
+</body>
+</html>

@@ -1,0 +1,184 @@
+package br.ufrn.PDSgrupo5.framework.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import br.ufrn.PDSgrupo5.framework.enumeration.EnumSituacaoProfissionalSaude;
+import br.ufrn.PDSgrupo5.framework.enumeration.EnumTipoPapel;
+import br.ufrn.PDSgrupo5.framework.exception.AcessoNegadoException;
+import br.ufrn.PDSgrupo5.framework.exception.ValidacaoException;
+import br.ufrn.PDSgrupo5.framework.handler.UsuarioHelper;
+import br.ufrn.PDSgrupo5.framework.model.HorarioAtendimento;
+import br.ufrn.PDSgrupo5.framework.model.Profissional;
+import br.ufrn.PDSgrupo5.framework.model.Usuario;
+import br.ufrn.PDSgrupo5.framework.repository.HorarioAtendimentoRepository;
+import br.ufrn.PDSgrupo5.framework.repository.ProfissionalRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+
+@Service
+public class ProfissionalService {
+	private ProfissionalRepository profissionalRepository;
+	
+	private UsuarioService usuarioService;
+	
+	private UsuarioHelper usuarioHelper;
+
+	private HorarioAtendimentoRepository horarioAtendimentoRepository;
+	
+	private ValidarProfissionalStrategy validarProfissionalStrategy;
+	
+	@Autowired
+	public ProfissionalService(ProfissionalRepository profissionalRepository,
+									UsuarioService usuarioService, UsuarioHelper usuarioHelper,
+									HorarioAtendimentoRepository hr,
+									ValidarProfissionalStrategy validarProfissionalStrategy) {
+		this.profissionalRepository = profissionalRepository;
+		this.usuarioService = usuarioService;
+		this.usuarioHelper = usuarioHelper;
+		this.horarioAtendimentoRepository = hr;
+		this.validarProfissionalStrategy = validarProfissionalStrategy;
+	}
+	
+	public Profissional salvar(Profissional ps) {
+		return profissionalRepository.save(ps);
+	}
+	
+	public void salvarProfissional(Profissional ps) {
+		if(ps.getId() == null) {
+			ps.setAtivo(true);
+			ps.setUsuario(usuarioService.prepararUsuarioParaCriacao(ps.getUsuario()));
+			ps.getUsuario().setEnumTipoPapel(EnumTipoPapel.PROFISSIONAL_SAUDE);
+			ps.setSituacaoProfissionalSaude(EnumSituacaoProfissionalSaude.AGUARDANDO_ANALISE);
+		} else {
+			Profissional psAux = buscarProfissionalPorUsuarioLogado();
+			ps.setLegalizado(psAux.isLegalizado());
+			ps.setHorarioAtendimento(psAux.getHorarioAtendimento());
+		}
+
+		salvar(ps);
+	}
+	
+	public void validarDados(Profissional profissional, BindingResult br) throws ValidacaoException {
+		br = validarProfissionalStrategy.validarProfissional(profissional, br);
+		
+		if(!profissional.getEmail().matches("^(.+)@(.+)$")){
+            br.rejectValue("email", "","E-mail inválido");
+        }
+		
+        if(usuarioService.loginJaExiste(profissional.getUsuario())){
+            br.rejectValue("usuario.login", "","Login já existe");
+        }
+        
+        Profissional p = buscarProfissionalPorEmail(profissional.getEmail());
+        if(Objects.nonNull(p)){
+            if(p.getId() != profissional.getId()){
+                br.rejectValue("email", "","E-mail já pertence a outro usuário");
+            }
+        }
+        
+		if(br.hasErrors()){
+			throw new ValidacaoException(br);
+		}
+	}
+
+	public Profissional verificarEdicao(Profissional ps) {
+        Profissional psAux = buscarProfissionalPorUsuarioLogado();
+		//nenhum atributo do usuário será modificado na edição
+		ps.setUsuario(psAux.getUsuario());
+
+		ps.setId(psAux.getId());
+		ps.setSituacaoProfissionalSaude(psAux.getSituacaoProfissionalSaude());
+
+        if(Objects.isNull(ps.getEndereco())){
+            ps.setEndereco(null);
+        }else{
+        	ps.getEndereco().setId(psAux.getEndereco().getId());
+		}
+
+        return ps;
+	}
+
+	public List<Profissional> listarTodosProfissionais(){
+		return profissionalRepository.findAll();
+	}
+	
+	public void excluir(Profissional ps) {
+		profissionalRepository.delete(ps);
+	}
+	
+	public Profissional buscarProfissionalPorUsuarioLogado() {
+		return profissionalRepository.findByUsuario(usuarioHelper.getUsuarioLogado());
+	}
+	
+	public Profissional buscarProfissionalPorUsuario(Long id){
+        Usuario usuario = usuarioService.buscarUsuarioPeloId(id);
+        return profissionalRepository.findByUsuario(usuario);
+    }
+
+    public List<Profissional> listarProfissionaisStatusLegalizacao(boolean legalizado){
+		return profissionalRepository.findAllByLegalizado(legalizado);
+	}
+    
+	public Profissional buscarProfissionalPorId(Long id){
+		return profissionalRepository.findById(id).orElse(null);
+	}
+	
+	private Profissional buscarProfissionalPorEmail(String email) {
+		return profissionalRepository.findByEmail(email);
+	}
+
+	public Profissional adicionarHorarioAtendimento(HorarioAtendimento ha) {
+		Profissional ps = buscarProfissionalPorUsuarioLogado();
+		ps.getHorarioAtendimento().add(ha);
+		return salvar(ps);
+	}
+
+	public List<HorarioAtendimento> buscarHorariosAtendimento() {
+		Profissional ps = buscarProfissionalPorUsuarioLogado();
+		return ps.getHorarioAtendimento();
+	}
+	
+	public List<HorarioAtendimento> buscarHorariosAtendimentoLivres(Long id){
+		Profissional ps = buscarProfissionalPorId(id);
+		List<HorarioAtendimento> todosHorarios = ps.getHorarioAtendimento();
+		
+		List<HorarioAtendimento> horariosLivres = new ArrayList<HorarioAtendimento>();
+		for (HorarioAtendimento horario : todosHorarios) {
+			if(horario.isLivre()) {
+				horariosLivres.add(horario);
+			}
+		}
+		return horariosLivres;
+	}
+
+	public Profissional excluirHorarioAtendimento(Long idHorarioAtendimento){
+		Profissional ps = buscarProfissionalPorUsuarioLogado();
+
+		ps.getHorarioAtendimento().removeIf(x -> x.getId().equals(idHorarioAtendimento));
+		horarioAtendimentoRepository.delete(horarioAtendimentoRepository.findById(idHorarioAtendimento).get());
+
+		return salvar(ps);
+	}
+
+	public void verificarPermissao(Profissional ps) throws AcessoNegadoException {
+		if(ps.getId() == null){ //eh usuário novo
+			return;
+		}
+
+		Profissional psLogado = buscarProfissionalPorUsuarioLogado();
+
+		if(usuarioHelper.getUsuarioLogado().getEnumTipoPapel() == EnumTipoPapel.VALIDADOR
+				|| ps.getId() == null){
+			return;
+		}
+
+		if( ps.getId() != psLogado.getId()
+				|| ps.getUsuario().getId() != psLogado.getUsuario().getId()){
+			throw new AcessoNegadoException("Você não tem permissão para editar esse usuário");
+		}
+	}
+}

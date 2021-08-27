@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      style="font-size: 100%;">
+
+    <head>
+
+        <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">PDS (Grupo 5)</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="author" content="PDS - Grupo 5(2021.1)"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" type="image/png" href="/img/logo.png"/>
+
+        <!-- Bootstrap core CSS -->
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+        <link href="/css/layout.css" rel="stylesheet">
+    </head>
+
+    <body class="bg-light">
+        <th:block layout:fragment="menu">
+            <div th:replace="fragments/layout :: menu(item='', subitem='')"></div>
+        </th:block>
+
+
+        <!-- html -->
+        <div id="main">
+            <th:block layout:fragment="content">
+            </th:block>
+        </div>
+
+
+        <th:block layout:fragment="footer">
+            <footer class="footer mt-5 bg-dark text-white">
+                <div class="container p-3 text-right">
+                    <div class="row">
+                        <div class="col">
+                            <b><a class="text-white">Grupo 5 (2021.1) </a></b>
+                            <p>Copyright <i class="fa fa-copyright" aria-hidden="true"></i> 2021</p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </th:block>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <script src="/js/layout.js"></script>
+
+        <th:block layout:fragment="js">
+        </th:block>
+    </body>
+</html>

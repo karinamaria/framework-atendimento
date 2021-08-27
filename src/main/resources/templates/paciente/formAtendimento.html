@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html	lang="pt-br" xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:th="http://www.thymeleaf.org"
+       	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+         layout:decorator="~{fragments/layout_usuario_logado}">
+<head>
+	<meta charset="UTF-8">
+	<title>Agendar atendimento</title>
+</head>
+<body>
+	<th:block layout:fragment="content">	
+        <div class="ml-md-5 mr-md-5 mb-5">
+        	<h3 class="text-secondary mt-4 mb-4 text-center"><span th:text="${profissional.nome}"></span>, <span th:text="${profissional.enumTipoRegistro.getDescricao()}"></span></h3>
+        	<p class="card-text"><span th:utext="${profissional.descricao}"></span></p>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-table me-1"></i>
+                    Horários de atendimento disponíveis
+                </div>
+                <div class="card-body">
+                    <table id="datatablesSimple">
+                        <thead>
+                            <tr>
+                            	<th>Data</th>
+                                <th>Dia da semana</th>
+                                <th>Hora de início</th>
+                                <th>Hora de fim</th>
+                                <th>Preço</th>
+                                <th>Opção</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="horario : ${horariosAtendimento}">
+                        	<td th:text="${horario.dataToString()}"></td>
+                            <td th:text="${horario.diaSemana}"></td>
+                            <td th:text="${horario.horaInicioToString()}"></td>
+                            <td th:text="${horario.horaFimToString()}"></td>
+                            <td th:text="${horario.precoToString()}"></td>
+                            
+                            <td class="actions-col">
+                                <a th:data-id="${horario.id}" th:data-profissional="${profissional.id}" data-toggle="modal" data-target="#agendarAtendimentoModal" id="btnAgendarAtendimento" class="btn btn-action">
+                                    <i class="fa fa-calendar"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal agendar atendimento -->
+		<div class="modal fade" id="agendarAtendimentoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLabel">AGENDAR ATENDIMENTO</h5>
+		        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+		        </button>
+		      </div>
+		      <div class="modal-body">
+				<form th:action="@{/paciente/agendarAtendimento}" method="post" th:object="${atendimento}">
+					<input name="horarioAtendimentoId" type="hidden"/>
+                    <input name="profissionalId" type="hidden"/>
+                    
+                    <div class="form-row">
+		              <div class="form-group col-md-8">
+		                <label class="text-secondary text-center" for="tituloAtendimentoInput">Título do atendimento</label>
+		                <input th:field="*{titulo}" type="text" class="form-control mx-auto" id="tituloAtendimentoInput" required />         
+		              </div>
+		            </div>
+                    
+                    <div class="form-row">
+		              <div class="form-group col-md-8">
+		                <label class="text-secondary text-center" for="tipoAtendimentoInput">Tipo do atendimento</label>
+		                <select th:field="*{enumTipoAtendimento}" class="form-control mx-auto" id="tipoAtendimentoInput" required>
+		                  <option value="" selected>Selecione</option>
+		                  <option th:each="tipoAtendimento : ${T(br.ufrn.PDSgrupo5.framework.enumeration.EnumTipoAtendimento).values()}"
+		                          th:value="${tipoAtendimento}" th:text="${tipoAtendimento.descricao}"></option>
+		                </select>
+		              </div>
+		            </div>
+		            
+		            <div class="form-row">
+		              <div class="form-group col-md-8">
+		                <label class="text-secondary text-center" for="descricaoAtendimentoInput">Breve descrição</label>
+		                <textarea th:field="*{descricao}" class="form-control mx-auto" name="descricaoAtendimento" id="descricaoAtendimentoInput" required></textarea>         
+		              </div>
+		            </div>
+                    
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+		               <button type="submit" class="btn btn-primary">Agendar</button>
+		            </div>
+				</form>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+        
+	</th:block>
+	<th:block layout:fragment="js">
+		<script>
+	        //Modal agendar atendimento
+	        $('#agendarAtendimentoModal').on('show.bs.modal', function(e) {
+	            var idHorarioAtendimento = $(e.relatedTarget).data('id');
+	            $(e.currentTarget).find('input[name="horarioAtendimentoId"]').val(idHorarioAtendimento);
+	            
+	            var idProfissional = $(e.relatedTarget).data('profissional');
+	            $(e.currentTarget).find('input[name="profissionalId"]').val(idProfissional);
+	        });
+   		</script>
+	</th:block>
+</body>
+</html>

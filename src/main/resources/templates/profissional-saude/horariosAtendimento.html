@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html	lang="pt-br" xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:th="http://www.thymeleaf.org"
+       	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+         layout:decorator="~{fragments/layout_usuario_logado}">
+<head>
+	<meta charset="UTF-8">
+	<title>Horários de atendimento</title>
+</head>
+<body>
+	<th:block layout:fragment="content">
+        <div class="ml-md-5 mr-md-5 mb-5">
+        	<h2 class="text-secondary mt-4 mb-4 text-center">Horários de atendimento</h2>
+        	<div th:if="${mensagemErro}" class="text-center alert alert-danger">
+	    		<span th:text="${mensagemErro}"></span>
+	   		</div>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-table me-1"></i>
+                    Lista de horários de atendimento
+                    <button type="button" class="btn btn-primary align-items-end" data-bs-toggle="modal" data-bs-target="#addHorarioModal">
+  						Adicionar horário
+					</button>
+                </div>
+                <div class="card-body">
+                    <table id="datatablesSimple">
+                        <thead>
+                            <tr>
+                            	<th>Data</th>
+                                <th>Dia da semana</th>
+                                <th>Hora de início</th>
+                                <th>Hora de fim</th>
+                                <th>Status</th>
+                                <th>Preço</th>
+                                <th>Opção</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="horario : ${horariosAtendimento}">
+                        	<td th:text="${horario.dataToString()}"></td>
+                            <td th:text="${horario.diaSemana}"></td>
+                            <td th:text="${horario.horaInicioToString()}"></td>
+                            <td th:text="${horario.horaFimToString()}"></td>
+                            <td th:text="${horario.statusToString()}"></td>
+                            <td th:text="${horario.precoToString()}"></td>
+                            
+                            <td class="actions-col">
+                                <a th:if="!${horario.livre}" th:data-id="${horario.id}" data-toggle="modal" data-tt="Visualizar paciente" data-target="#" id="btnViewInfoPaciente" class="btn btn-action">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+								<a th:href="@{'/profissional-saude/excluirHorarioAtendimento?idHorarioAtendimento=' + ${horario.id}}" data-toggle="tooltip" data-placement="top" title="Excluir horário"  id="btnExcluirHorario" class="btn btn-action">
+									<i class="fa fa-trash"></i>
+								</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal -->
+		<div class="modal fade" id="addHorarioModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="exampleModalLabel">Adicionar horário de atendimento</h5>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body">
+				<form th:action="@{/profissional-saude/addHorarioAtendimento}" method="post">
+					<div class="form-row">
+						<div class="form-group col-md-5">
+							<label for="dataHorarioInput">Data</label> <input
+					         class="form-control" id="dataHorarioInput" type="date"
+					         name="data" required="required" />
+						</div>
+					    <div class="form-group col-md-3">
+							<label for="precoHorarioInput">Preço</label> <input
+					         class="form-control" id="precoHorarioInput" type="number" step="0.01"
+					         name="preco" required="required" />
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col-md-4">
+						     <label for="horaInicioInput">Horário de início</label> <input
+						         class="form-control" id="horaInicioInput" type="time"
+						         name="horaInicio" required="required" />
+						 </div>
+						 <div class="form-group col-md-4">
+						     <label for="horaFimInput">Horário de fim</label> <input
+						         class="form-control" id="horaFimInput" type="time"
+						         name="horaFim" required="required" />
+						 </div> 
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+		               <button type="submit" class="btn btn-primary">Adicionar</button>
+		            </div>
+				</form>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	</th:block>
+	<th:block layout:fragment="js">
+
+	</th:block>
+</body>
+</html>

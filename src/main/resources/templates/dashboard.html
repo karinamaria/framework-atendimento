@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="~{fragments/layout_usuario_logado}">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+
+</head>
+
+<body class="bg-light">
+<th:block layout:fragment="content">
+    <!-- inicio validador -->
+    <div class="container-fluid" th:if="${isValidador}">
+        <div th:replace="fragments/layout_dashboard :: validadorDashboard"></div>
+    </div>
+    <!-- fim validador -->
+
+    <!-- inicio paciente -->
+    <div class="container-fluid" th:if="${isPaciente}">
+        <div th:replace="fragments/layout_dashboard :: pacienteDashboard"></div>
+    </div>
+    <!-- fim paciente -->
+
+    <!-- inicio profissional -->
+    <div class="container-fluid" th:if="${isProfissional}">
+        <div th:replace="fragments/layout_dashboard :: profissionalDashboard"></div>
+    </div>
+    <!-- fim profissional -->
+
+</th:block>
+<th:block layout:fragment="js">
+    <script>
+        //Modal do validador
+        $('#exampleModal').on('show.bs.modal', function(e) {
+            var idProfissional = $(e.relatedTarget).data('id');
+            $(e.currentTarget).find('input[name="profissionalId"]').val(idProfissional);
+        });
+
+        //Modal do aceitar/recusar atendimento
+        $('#modalStatusAtendimento').on('show.bs.modal', function(e) {
+            var idAtendimento = $(e.relatedTarget).data('id');
+            $(e.currentTarget).find('input[name="atendimentoId"]').val(idAtendimento);
+        });
+    </script>
+</th:block>
+</body>
+</html>
