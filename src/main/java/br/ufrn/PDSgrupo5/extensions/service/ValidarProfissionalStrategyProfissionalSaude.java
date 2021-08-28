@@ -20,7 +20,7 @@ public class ValidarProfissionalStrategyProfissionalSaude implements ValidarProf
 	public BindingResult validarProfissional(Profissional p, BindingResult br) {
 		ProfissionalSaude ps = (ProfissionalSaude) p;
 		
-		if(!pessoaService.ehCpfValido(ps.getCpf())) {
+		if(!pessoaService.ehCpfOuCnpjValido(ps.getPessoa().getCpfOuCnpj())) {
 			br.rejectValue("cpf", "", "CPF inválido");
 		}
 		

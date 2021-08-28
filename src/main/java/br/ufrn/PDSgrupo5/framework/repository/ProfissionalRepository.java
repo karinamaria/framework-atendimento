@@ -9,10 +9,8 @@ import br.ufrn.PDSgrupo5.framework.model.Usuario;
 import java.util.List;
 
 public interface ProfissionalRepository extends JpaRepository<Profissional, Long> {
-	@Query(value="SELECT p FROM Profissional p WHERE p.usuario=?1")
+	@Query(value="SELECT p FROM Profissional p WHERE p.pessoa.usuario=?1")
     Profissional findByUsuario(Usuario usuario);
 	
 	List<Profissional> findAllByLegalizado(boolean legalizado);
-
-	Profissional findByEmail(String email);
 }

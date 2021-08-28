@@ -53,10 +53,10 @@ public class PacienteService {
      * @return um BindingResult que contém os erros, caso existam
      */
     public void validarPaciente(Paciente paciente, BindingResult br) throws ValidacaoException{
-        if(!pessoaService.ehCpfValido(paciente.getPessoa().getCpf())){
+        if(!pessoaService.ehCpfValido(paciente.getPessoa().getCpfOuCnpj())){
             br.rejectValue("pessoa.cpf", "", "CPF inválido");
         }
-        Pessoa pessoa = pessoaService.buscarPessoaPorCpf(paciente.getPessoa().getCpf());
+        Pessoa pessoa = pessoaService.buscarPessoaPorCpf(paciente.getPessoa().getCpfOuCnpj());
         if(Objects.nonNull(pessoa)){
             if(pessoa.getId() != paciente.getPessoa().getId()){
                 br.rejectValue("pessoa.cpf", "","CPF já pertence a outra pessoa");

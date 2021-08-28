@@ -8,7 +8,7 @@ import br.ufrn.PDSgrupo5.framework.model.Usuario;
 
 @Repository
 public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
-    Pessoa findByCpf(String cpf);
+    Pessoa findByCpfOuCnpj(String cpfOuCnpj);
 
     Pessoa findByEmail(String email);
 

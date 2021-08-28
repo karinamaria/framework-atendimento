@@ -133,11 +133,11 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="cpfPacienteInput">CPF</label>
-                                <input class="form-control" id="cpfPacienteInput" type="text" th:field="*{pessoa.cpf}"
+                                <input class="form-control" id="cpfPacienteInput" type="text" th:field="*{pessoa.cpfOuCnpj}"
                                        data-mask="000.000.000-00" data-mask-reverse="true"required="required"/>
                                 <div style="color: red;">
                                     <div th:if="${#fields.hasErrors('pessoa.cpf')}"
-                                         th:errors="*{pessoa.cpf}">errors
+                                         th:errors="*{pessoa.cpfOuCnpj}">errors
                                     </div>
                                 </div>
                             </div>
@@ -161,7 +161,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group col-md-6">
+                            <!--<div class="form-group col-md-6">
                                 <label for="DataNascimentoPacienteInput">Data Nascimento</label> <input
                                     class="form-control" id="DataNascimentoPacienteInput" type="date"
                                     th:field="*{pessoa.dataNascimento}" required="required"/>
@@ -171,7 +171,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
@@ -283,41 +283,41 @@
                             <div class="form-group col-md-4">
                                 <label for="nomeProfissionalSaudeInput">Nome do Profissional</label> <input
                                     class="form-control" id="nomeProfissionalSaudeInput" type="text"
-                                    th:field="*{nome}" required="required" />
+                                    th:field="*{pessoa.nome}" required="required" />
                                 <div style="color: red;">
-                                    <div th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}">errors</div>
+                                    <div th:if="${#fields.hasErrors('pessoa.nome')}" th:errors="*{pessoa.nome}">errors</div>
                                 </div>
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="cpfInput">CPF</label> <input class="form-control"
-                                                                         id="cpfInput" type="text" th:field="*{cpf}"
+                                                                         id="cpfInput" type="text" th:field="*{pessoa.cpfOuCnpj}"
                                                                          data-mask="000.000.000-00" data-mask-reverse="true"
                                                                          required="required" />
                                 <div style="color: red;">
-                                    <div th:if="${#fields.hasErrors('cpf')}"
-                                         th:errors="*{cpf}">errors</div>
+                                    <div th:if="${#fields.hasErrors('pessoa.cpfOuCnpj')}"
+                                         th:errors="*{pessoa.cpfOuCnpj}">errors</div>
                                 </div>
                             </div>
-                           <div class="form-group col-md-4">
+                           <!--<div class="form-group col-md-4">
                                 <label for="sexoProfissionalSaudeInput">Sexo</label>
                                 <select class="form-control" th:field="*{sexo}" id="sexoProfissionalSaudeInput" required>
                                     <option value="F">Feminino</option>
                                     <option value="M">Masculino</option>
                                 </select>
-                            </div>
+                            </div>-->
                         </div>
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="emailProfissionalSaudeInput">E-mail</label> <input
                                     class="form-control" id="emailProfissionalSaudeInput" type="text"
-                                    th:field="*{email}" required="required" />
+                                    th:field="*{pessoa.email}" required="required" />
                                 <div style="color: red;">
-                                    <div th:if="${#fields.hasErrors('email')}"
-                                         th:errors="*{email}">errors</div>
+                                    <div th:if="${#fields.hasErrors('pessoa.email')}"
+                                         th:errors="*{pessoa.email}">errors</div>
                                 </div>
                             </div>
-                            <div class="form-group col-md-6">
+                            <!--<div class="form-group col-md-6">
                                 <label for="dataNascimentoProfissionalSaudeInput">Data de Nascimento</label> <input
                                     class="form-control" id="dataNascimentoProfissionalSaudeInput" type="date"
                                     th:field="*{dataNascimento}" required="required" />
@@ -325,26 +325,26 @@
                                     <div th:if="${#fields.hasErrors('dataNascimento')}"
                                          th:errors="*{dataNascimento}">errors</div>
                                 </div>
-                            </div>
+                            </div>-->
                         </div>
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="loginProfissionalSaudeInput">Login</label> <input
                                     class="form-control" id="loginProfissionalSaudeInput" type="text"
-                                    th:field="*{usuario.login}" required="required" />
+                                    th:field="*{pessoa.usuario.login}" required="required" />
                                 <div style="color: red;">
-                                    <div th:if="${#fields.hasErrors('usuario.login')}"
-                                         th:errors="*{usuario.login}">errors</div>
+                                    <div th:if="${#fields.hasErrors('pessoa.usuario.login')}"
+                                         th:errors="*{pessoa.usuario.login}">errors</div>
                                 </div>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="senhaProfissionalSaudeInput">Senha</label> <input
                                     class="form-control" id="senhaProfissionalSaudeInput" type="password"
-                                    th:field="*{usuario.senha}" required="required" />
+                                    th:field="*{pessoa.usuario.senha}" required="required" />
                                 <div style="color: red;">
-                                    <div th:if="${#fields.hasErrors('usuario.senha')}"
-                                         th:errors="*{usuario.senha}">errors</div>
+                                    <div th:if="${#fields.hasErrors('pessoa.usuario.senha')}"
+                                         th:errors="*{pessoa.usuario.senha}">errors</div>
                                 </div>
                             </div>
                         </div>
@@ -389,28 +389,28 @@
                         <div class="form-row">
                             <div class="form-group col-md-4">
                                 <label for="cepProfissionalInput">CEP</label>
-                                <input type="text" class="form-control" id="cepProfissionalInput" data-mask="00000-000" th:field="*{endereco.cep}" required="required">
+                                <input type="text" class="form-control" id="cepProfissionalInput" data-mask="00000-000" th:field="*{pessoa.endereco.cep}" required="required">
                                 <div style="color: red;">
-                                    <div th:if="${#fields.hasErrors('endereco.cep')}"
-                                         th:errors="*{endereco.cep}">errors</div>
+                                    <div th:if="${#fields.hasErrors('pessoa.endereco.cep')}"
+                                         th:errors="*{pessoa.endereco.cep}">errors</div>
                                 </div>
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="ruaProfissionalInput">Rua</label> <input
                                     class="form-control" id="ruaProfissionalInput" type="text"
-                                    th:field="*{endereco.rua}" required="required" />
+                                    th:field="*{pessoa.endereco.rua}" required="required" />
                                 <div style="color: red;">
-                                    <div th:if="${#fields.hasErrors('endereco.rua')}"
-                                         th:errors="*{endereco.rua}">errors</div>
+                                    <div th:if="${#fields.hasErrors('pessoa.endereco.rua')}"
+                                         th:errors="*{pessoa.endereco.rua}">errors</div>
                                 </div>
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="bairroProfissionalInput">Bairro</label> <input
                                     class="form-control" id="bairroProfissionalInput" type="text"
-                                    th:field="*{endereco.bairro}" required="required" />
+                                    th:field="*{pessoa.endereco.bairro}" required="required" />
                                 <div style="color: red;">
-                                    <div th:if="${#fields.hasErrors('endereco.bairro')}"
-                                         th:errors="*{endereco.bairro}">errors</div>
+                                    <div th:if="${#fields.hasErrors('pessoa.endereco.bairro')}"
+                                         th:errors="*{pessoa.endereco.bairro}">errors</div>
                                 </div>
                             </div>
                         </div>
@@ -419,28 +419,28 @@
                         <div class="form-row">
                             <div class="form-group col-md-4">
                                 <label for="complementoProfissionalInput">Complemento</label>
-                                <input type="text" class="form-control" id="complementoProfissionalInput" th:field="*{endereco.complemento}" required="required">
+                                <input type="text" class="form-control" id="complementoProfissionalInput" th:field="*{pessoa.endereco.complemento}" required="required">
                                 <div style="color: red;">
-                                    <div th:if="${#fields.hasErrors('endereco.complemento')}"
-                                         th:errors="*{endereco.complemento}">errors</div>
+                                    <div th:if="${#fields.hasErrors('pessoa.endereco.complemento')}"
+                                         th:errors="*{pessoa.endereco.complemento}">errors</div>
                                 </div>
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="numeroProfissionalInput">Número</label> <input
                                     class="form-control" id="numeroProfissionalInput" type="number"
-                                    th:field="*{endereco.numero}" required="required" />
+                                    th:field="*{pessoa.endereco.numero}" required="required" />
                                 <div style="color: red;">
-                                    <div th:if="${#fields.hasErrors('endereco.numero')}"
-                                         th:errors="*{endereco.numero}">errors</div>
+                                    <div th:if="${#fields.hasErrors('pessoa.endereco.numero')}"
+                                         th:errors="*{pessoa.endereco.numero}">errors</div>
                                 </div>
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="cidadeProfissionalInput">Cidade</label> <input
                                     class="form-control" id="cidadeProfissionalInput" type="text"
-                                    th:field="*{endereco.cidade}" required="required" />
+                                    th:field="*{pessoa.endereco.cidade}" required="required" />
                                 <div style="color: red;">
                                     <div th:if="${#fields.hasErrors('endereco.cidade')}"
-                                         th:errors="*{endereco.cidade}">errors</div>
+                                         th:errors="*{pessoa.endereco.cidade}">errors</div>
                                 </div>
                             </div>
                         </div>

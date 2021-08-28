@@ -10,6 +10,7 @@ import br.ufrn.PDSgrupo5.framework.exception.AcessoNegadoException;
 import br.ufrn.PDSgrupo5.framework.exception.ValidacaoException;
 import br.ufrn.PDSgrupo5.framework.handler.UsuarioHelper;
 import br.ufrn.PDSgrupo5.framework.model.HorarioAtendimento;
+import br.ufrn.PDSgrupo5.framework.model.Pessoa;
 import br.ufrn.PDSgrupo5.framework.model.Profissional;
 import br.ufrn.PDSgrupo5.framework.model.Usuario;
 import br.ufrn.PDSgrupo5.framework.repository.HorarioAtendimentoRepository;
@@ -21,26 +22,30 @@ import org.springframework.validation.BindingResult;
 
 @Service
 public class ProfissionalService {
-	private ProfissionalRepository profissionalRepository;
+	private final ProfissionalRepository profissionalRepository;
 	
-	private UsuarioService usuarioService;
+	private final UsuarioService usuarioService;
 	
-	private UsuarioHelper usuarioHelper;
+	private final UsuarioHelper usuarioHelper;
 
-	private HorarioAtendimentoRepository horarioAtendimentoRepository;
+	private final HorarioAtendimentoRepository horarioAtendimentoRepository;
 	
-	private ValidarProfissionalStrategy validarProfissionalStrategy;
+	private final ValidarProfissionalStrategy validarProfissionalStrategy;
+
+	private final PessoaService pessoaService;
 	
 	@Autowired
 	public ProfissionalService(ProfissionalRepository profissionalRepository,
 									UsuarioService usuarioService, UsuarioHelper usuarioHelper,
 									HorarioAtendimentoRepository hr,
-									ValidarProfissionalStrategy validarProfissionalStrategy) {
+									ValidarProfissionalStrategy validarProfissionalStrategy,
+							   		PessoaService pessoaService) {
 		this.profissionalRepository = profissionalRepository;
 		this.usuarioService = usuarioService;
 		this.usuarioHelper = usuarioHelper;
 		this.horarioAtendimentoRepository = hr;
 		this.validarProfissionalStrategy = validarProfissionalStrategy;
+		this.pessoaService = pessoaService;
 	}
 	
 	public Profissional salvar(Profissional ps) {
@@ -50,8 +55,8 @@ public class ProfissionalService {
 	public void salvarProfissional(Profissional ps) {
 		if(ps.getId() == null) {
 			ps.setAtivo(true);
-			ps.setUsuario(usuarioService.prepararUsuarioParaCriacao(ps.getUsuario()));
-			ps.getUsuario().setEnumTipoPapel(EnumTipoPapel.PROFISSIONAL_SAUDE);
+			ps.getPessoa().setUsuario(usuarioService.prepararUsuarioParaCriacao(ps.getPessoa().getUsuario()));
+			ps.getPessoa().getUsuario().setEnumTipoPapel(EnumTipoPapel.PROFISSIONAL_SAUDE);
 			ps.setSituacaoProfissionalSaude(EnumSituacaoProfissionalSaude.AGUARDANDO_ANALISE);
 		} else {
 			Profissional psAux = buscarProfissionalPorUsuarioLogado();
@@ -65,20 +70,20 @@ public class ProfissionalService {
 	public void validarDados(Profissional profissional, BindingResult br) throws ValidacaoException {
 		br = validarProfissionalStrategy.validarProfissional(profissional, br);
 		
-		if(!profissional.getEmail().matches("^(.+)@(.+)$")){
+		if(!profissional.getPessoa().getEmail().matches("^(.+)@(.+)$")){
             br.rejectValue("email", "","E-mail inválido");
         }
 		
-        if(usuarioService.loginJaExiste(profissional.getUsuario())){
+        if(usuarioService.loginJaExiste(profissional.getPessoa().getUsuario())){
             br.rejectValue("usuario.login", "","Login já existe");
         }
         
-        Profissional p = buscarProfissionalPorEmail(profissional.getEmail());
-        if(Objects.nonNull(p)){
-            if(p.getId() != profissional.getId()){
-                br.rejectValue("email", "","E-mail já pertence a outro usuário");
-            }
-        }
+        Pessoa pessoa = pessoaService.buscarPessoaPorEmail(profissional.getPessoa().getEmail());
+		if(Objects.nonNull(pessoa)){
+			if(pessoa.getId() != profissional.getPessoa().getId()){
+				br.rejectValue("pessoa.email", "","E-mail já pertence a outro usuário");
+			}
+		}
         
 		if(br.hasErrors()){
 			throw new ValidacaoException(br);
@@ -88,15 +93,15 @@ public class ProfissionalService {
 	public Profissional verificarEdicao(Profissional ps) {
         Profissional psAux = buscarProfissionalPorUsuarioLogado();
 		//nenhum atributo do usuário será modificado na edição
-		ps.setUsuario(psAux.getUsuario());
+		ps.getPessoa().setUsuario(psAux.getPessoa().getUsuario());
 
 		ps.setId(psAux.getId());
 		ps.setSituacaoProfissionalSaude(psAux.getSituacaoProfissionalSaude());
 
-        if(Objects.isNull(ps.getEndereco())){
-            ps.setEndereco(null);
+        if(Objects.isNull(ps.getPessoa().getEndereco())){
+            ps.getPessoa().setEndereco(null);
         }else{
-        	ps.getEndereco().setId(psAux.getEndereco().getId());
+        	ps.getPessoa().getEndereco().setId(psAux.getPessoa().getEndereco().getId());
 		}
 
         return ps;
@@ -126,10 +131,6 @@ public class ProfissionalService {
 	public Profissional buscarProfissionalPorId(Long id){
 		return profissionalRepository.findById(id).orElse(null);
 	}
-	
-	private Profissional buscarProfissionalPorEmail(String email) {
-		return profissionalRepository.findByEmail(email);
-	}
 
 	public Profissional adicionarHorarioAtendimento(HorarioAtendimento ha) {
 		Profissional ps = buscarProfissionalPorUsuarioLogado();
@@ -146,7 +147,7 @@ public class ProfissionalService {
 		Profissional ps = buscarProfissionalPorId(id);
 		List<HorarioAtendimento> todosHorarios = ps.getHorarioAtendimento();
 		
-		List<HorarioAtendimento> horariosLivres = new ArrayList<HorarioAtendimento>();
+		List<HorarioAtendimento> horariosLivres = new ArrayList<>();
 		for (HorarioAtendimento horario : todosHorarios) {
 			if(horario.isLivre()) {
 				horariosLivres.add(horario);
@@ -176,8 +177,8 @@ public class ProfissionalService {
 			return;
 		}
 
-		if( ps.getId() != psLogado.getId()
-				|| ps.getUsuario().getId() != psLogado.getUsuario().getId()){
+		if( ps.getId().equals(psLogado.getId())
+				|| ps.getPessoa().getUsuario().getId().equals(psLogado.getPessoa().getUsuario().getId())) {
 			throw new AcessoNegadoException("Você não tem permissão para editar esse usuário");
 		}
 	}

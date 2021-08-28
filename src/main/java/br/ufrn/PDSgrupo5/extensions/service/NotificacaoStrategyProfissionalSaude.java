@@ -21,7 +21,7 @@ public class NotificacaoStrategyProfissionalSaude implements NotificacaoStrategy
 		
 		ProfissionalSaude ps = (ProfissionalSaude) a.getProfissional();
 		String texto = "Notamos que já faz um tempo desde seu atendimento com o "
-						+ a.getProfissional().getNome()
+						+ a.getProfissional().getPessoa().getNome()
 						+ " (" + ps.getEnumTipoRegistro().getDescricao() + ")."
 						+ " De acordo com nossa programação, esse período é ideal para realizar um retorno."
 						+ "\nQue tal entrar no Sistema de Saúde v1.0 e realizar um novo agendamento?";
