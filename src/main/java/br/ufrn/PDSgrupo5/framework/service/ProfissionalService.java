@@ -56,7 +56,7 @@ public class ProfissionalService {
 		if(ps.getId() == null) {
 			ps.setAtivo(true);
 			ps.getPessoa().setUsuario(usuarioService.prepararUsuarioParaCriacao(ps.getPessoa().getUsuario()));
-			ps.getPessoa().getUsuario().setEnumTipoPapel(EnumTipoPapel.PROFISSIONAL_SAUDE);
+			ps.getPessoa().getUsuario().setEnumTipoPapel(EnumTipoPapel.PROFISSIONAL);
 			ps.setSituacaoProfissionalSaude(EnumSituacaoProfissionalSaude.AGUARDANDO_ANALISE);
 		} else {
 			Profissional psAux = buscarProfissionalPorUsuarioLogado();

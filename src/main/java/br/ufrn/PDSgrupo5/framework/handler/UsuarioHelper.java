@@ -54,7 +54,7 @@ public class UsuarioHelper {
     @ModelAttribute("isProfissional")
     public boolean verificaPapelProfissional(){
         if(getUsuarioLogado() != null){
-            return getUsuarioLogado().getEnumTipoPapel().equals(EnumTipoPapel.PROFISSIONAL_SAUDE);
+            return getUsuarioLogado().getEnumTipoPapel().equals(EnumTipoPapel.PROFISSIONAL);
         }
         return false;
     }
