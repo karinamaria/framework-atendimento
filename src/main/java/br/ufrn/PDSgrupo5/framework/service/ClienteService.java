@@ -8,7 +8,6 @@ import br.ufrn.PDSgrupo5.framework.model.Cliente;
 import br.ufrn.PDSgrupo5.framework.model.Pessoa;
 import br.ufrn.PDSgrupo5.framework.model.Usuario;
 import br.ufrn.PDSgrupo5.framework.repository.ClienteRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;

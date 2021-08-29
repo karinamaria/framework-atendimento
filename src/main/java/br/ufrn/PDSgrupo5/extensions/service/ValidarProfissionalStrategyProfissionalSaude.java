@@ -1,12 +1,12 @@
 package br.ufrn.PDSgrupo5.extensions.service;
 
-import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
-
 import br.ufrn.PDSgrupo5.extensions.model.ProfissionalSaude;
+import br.ufrn.PDSgrupo5.framework.model.Pessoa;
 import br.ufrn.PDSgrupo5.framework.model.Profissional;
 import br.ufrn.PDSgrupo5.framework.service.PessoaService;
 import br.ufrn.PDSgrupo5.framework.strategy.ValidarProfissionalStrategy;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import java.util.Objects;
 
@@ -27,17 +27,17 @@ public class ValidarProfissionalStrategyProfissionalSaude implements ValidarProf
 		ProfissionalSaude ps = (ProfissionalSaude) p;
 
 		if(!pessoaService.ehCpfOuCnpjValido(ps.getPessoa().getCpfOuCnpj())) {
-			br.rejectValue("pessoa.cpfOuCnpj", "", "CPF inválido");
+			br.rejectValue("pessoa.cpfOuCnpj", "", "CPF/CNPJ inválido");
 		}
 		
-		ProfissionalSaude profissional = profissionalSaudeService.buscarProfissionalSaudeCpfOuCnpj(ps.getPessoa().getCpfOuCnpj());
-		if(Objects.nonNull(profissional)) {
-			if(profissional.getId() != ps.getId()) {
-				br.rejectValue("pessoa.cpfOuCnpj", "", "CPF já pertence a outro profissional");
+		Pessoa pessoa = pessoaService.buscarPessoaPorCpf(ps.getPessoa().getCpfOuCnpj());
+		if(Objects.nonNull(pessoa)) {
+			if(pessoa.getId() != ps.getPessoa().getId()) {
+				br.rejectValue("pessoa.cpfOuCnpj", "", "CPF/CNPJ já pertence a outro profissional");
 			}
 		}
-	    profissional=null;
-	    profissional = profissionalSaudeService.buscarProfissionalPorNumeroRegistro(ps.getNumeroRegistro());
+
+	    ProfissionalSaude profissional = profissionalSaudeService.buscarProfissionalPorNumeroRegistro(ps.getNumeroRegistro());
 		if(Objects.nonNull(profissional)) {
 			if(profissional.getId() != ps.getId()) {
 				br.rejectValue("numeroRegistro", "", "Registro profissional já pertence a outro usuário");
