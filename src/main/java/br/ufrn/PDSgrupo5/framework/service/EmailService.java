@@ -44,7 +44,7 @@ public class EmailService {
 		List<Atendimento> atendimentos = atendimentoService.buscarAtendimentosRequeremNotificacao();
 		for(Atendimento a : atendimentos) {
 			
-			enviarEmailSimples(a.getPaciente().getPessoa().getEmail(), notificacaoStrategy.construirAssuntoNotificacao(), notificacaoStrategy.construirMensagemNotificacao(a));
+			enviarEmailSimples(a.getCliente().getPessoa().getEmail(), notificacaoStrategy.construirAssuntoNotificacao(), notificacaoStrategy.construirMensagemNotificacao(a));
 			
 			a.setRequerNotificacao(false);
 			atendimentoService.salvar(a);

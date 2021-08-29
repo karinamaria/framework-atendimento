@@ -27,13 +27,13 @@ public class ValidarProfissionalStrategyProfissionalSaude implements ValidarProf
 		ProfissionalSaude ps = (ProfissionalSaude) p;
 
 		if(!pessoaService.ehCpfOuCnpjValido(ps.getPessoa().getCpfOuCnpj())) {
-			br.rejectValue("cpf", "", "CPF inválido");
+			br.rejectValue("pessoa.cpfOuCnpj", "", "CPF inválido");
 		}
 		
 		ProfissionalSaude profissional = profissionalSaudeService.buscarProfissionalSaudeCpfOuCnpj(ps.getPessoa().getCpfOuCnpj());
 		if(Objects.nonNull(profissional)) {
 			if(profissional.getId() != ps.getId()) {
-				br.rejectValue("cpf", "", "CPF já pertence a outro profissional");
+				br.rejectValue("pessoa.cpfOuCnpj", "", "CPF já pertence a outro profissional");
 			}
 		}
 	    profissional=null;

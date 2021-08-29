@@ -2,8 +2,6 @@ package br.ufrn.PDSgrupo5.framework.model;
 
 import javax.persistence.*;
 
-import br.ufrn.PDSgrupo5.framework.enumeration.EnumTipoAtendimento;
-
 @Entity
 @Table(name = "atendimento")
 public class Atendimento extends EntidadeAbstrata {
@@ -19,14 +17,13 @@ public class Atendimento extends EntidadeAbstrata {
 	private Boolean confirmado = false;
 
 	@OneToOne
-	private Paciente paciente;
+	private Cliente cliente;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private Profissional profissional;
 
 	@Column(name="tipo_atendimento")
-	@Enumerated(EnumType.STRING)
-	private EnumTipoAtendimento enumTipoAtendimento;
+	private String tipoAtendimento;
 	
 	@Column(name="requer_notificacao")
 	private Boolean requerNotificacao = true;
@@ -38,7 +35,7 @@ public class Atendimento extends EntidadeAbstrata {
 		return horarioAtendimento;
 	}
 
-	public void setHorarioatendimento(HorarioAtendimento horarioAtendimento) {
+	public void setHorarioAtendimento(HorarioAtendimento horarioAtendimento) {
 		this.horarioAtendimento = horarioAtendimento;
 	}
 
@@ -66,12 +63,12 @@ public class Atendimento extends EntidadeAbstrata {
 		this.confirmado = status;
 	}
 
-	public Paciente getPaciente() {
-		return paciente;
+	public Cliente getCliente() {
+		return cliente;
 	}
 
-	public void setPaciente(Paciente paciente) {
-		this.paciente = paciente;
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
 	}
 
 	public Profissional getProfissional() {
@@ -82,12 +79,12 @@ public class Atendimento extends EntidadeAbstrata {
 		this.profissional = profissional;
 	}
 
-	public EnumTipoAtendimento getEnumTipoAtendimento() {
-		return enumTipoAtendimento;
+	public String getTipoAtendimento() {
+		return tipoAtendimento;
 	}
 
-	public void setEnumTipoAtendimento(EnumTipoAtendimento enumTipoAtendimento) {
-		this.enumTipoAtendimento = enumTipoAtendimento;
+	public void setTipoAtendimento(String tipoAtendimento) {
+		this.tipoAtendimento = tipoAtendimento;
 	}
 	
 	public Boolean getRequerNotificacao() {

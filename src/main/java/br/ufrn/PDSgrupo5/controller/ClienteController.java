@@ -2,10 +2,10 @@ package br.ufrn.PDSgrupo5.controller;
 
 import br.ufrn.PDSgrupo5.framework.exception.ValidacaoException;
 import br.ufrn.PDSgrupo5.framework.model.Atendimento;
-import br.ufrn.PDSgrupo5.framework.model.Paciente;
+import br.ufrn.PDSgrupo5.framework.model.Cliente;
 import br.ufrn.PDSgrupo5.framework.service.AtendimentoService;
 import br.ufrn.PDSgrupo5.framework.service.HorarioAtendimentoService;
-import br.ufrn.PDSgrupo5.framework.service.PacienteService;
+import br.ufrn.PDSgrupo5.framework.service.ClienteService;
 import br.ufrn.PDSgrupo5.framework.service.ProfissionalService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +19,17 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("paciente")
-public class PacienteController {
-    private PacienteService pacienteService;
-    private ProfissionalService profissionalSaudeService;
+public class ClienteController {
+    private ClienteService clienteService;
+    private ProfissionalService profissionalService;
     private AtendimentoService atendimentoService;
     private HorarioAtendimentoService horarioAtendimentoService;
 
     @Autowired
-    public PacienteController(PacienteService pacienteService, ProfissionalService profissionalSaudeService,
+    public ClienteController(ClienteService clienteService, ProfissionalService profissionalService,
     						  AtendimentoService atendimentoService, HorarioAtendimentoService horarioAtendimentoService){
-        this.pacienteService = pacienteService;
-        this.profissionalSaudeService = profissionalSaudeService;
+        this.clienteService = clienteService;
+        this.profissionalService = profissionalService;
         this.atendimentoService = atendimentoService;
         this.horarioAtendimentoService = horarioAtendimentoService;
     }
@@ -41,20 +41,20 @@ public class PacienteController {
 
     @GetMapping("/form")
     public String form(Model model){
-        if(!model.containsAttribute("paciente")){
-            model.addAttribute(new Paciente());
+        if(!model.containsAttribute("cliente")){
+            model.addAttribute(new Cliente());
         }
         return "paciente/form";
     }
 
     @PostMapping("/salvar")
-    public String salvar(@Valid Paciente paciente, BindingResult br, Model model){
+    public String salvar(@Valid Cliente paciente, BindingResult br, Model model){
 
         try{
-            paciente = pacienteService.verificarEdicao(paciente);
-            pacienteService.validarPaciente(paciente, br);
+            paciente = clienteService.verificarEdicao(paciente);
+            clienteService.validarCliente(paciente, br);
 
-            pacienteService.salvarPaciente(paciente);
+            clienteService.salvarCliente(paciente);
         }catch(ValidacaoException validacaoException){
             model.addAttribute("message", "Erro ao salvar paciente");
             model.addAttribute(paciente);
@@ -67,29 +67,29 @@ public class PacienteController {
     //o usuário edita seu próprio cadastro
     @GetMapping("/editar")
     public String editar(Model model){
-        model.addAttribute(pacienteService.buscarPacientePorUsuarioLogado());
+        model.addAttribute(clienteService.buscarClientePorUsuarioLogado());
         return "paciente/form";
     }
 
     @GetMapping("/perfil")
     public String visualizarPerfil(Model model){
-        model.addAttribute(pacienteService.buscarPacientePorUsuarioLogado());
+        model.addAttribute(clienteService.buscarClientePorUsuarioLogado());
         return "paginadevisualizacaoPerfil";
     }
     
     @DeleteMapping("/excluirPerfil")
     public String excluirPerfil(){
-        Paciente paciente = pacienteService.buscarPacientePorUsuarioLogado();
+        Cliente paciente = clienteService.buscarClientePorUsuarioLogado();
 
-        pacienteService.excluirPaciente(paciente);
+        clienteService.excluirCliente(paciente);
 
         return "redirect:/login";
     }
     
     @GetMapping("/visualizarProfissional/{id}")
     public String visualizarProfissional(@PathVariable("id") Long id, Model model) {
-    	model.addAttribute("profissional", profissionalSaudeService.buscarProfissionalPorId(id));
-    	model.addAttribute("horariosAtendimento", profissionalSaudeService.buscarHorariosAtendimentoLivres(id));
+    	model.addAttribute("profissional", profissionalService.buscarProfissionalPorId(id));
+    	model.addAttribute("horariosAtendimento", profissionalService.buscarHorariosAtendimentoLivres(id));
     	model.addAttribute("atendimento", new Atendimento());
     	
     	return "paciente/formAtendimento";
@@ -99,10 +99,10 @@ public class PacienteController {
     public String agendarAtendimento(@RequestParam("horarioAtendimentoId") Long idHorario, @RequestParam("profissionalId") Long idProfissional,
                                      @Valid Atendimento atendimento, RedirectAttributes ra) {
     	try{
-            atendimento.setPaciente(pacienteService.buscarPacientePorUsuarioLogado());
-            atendimento.setProfissional(profissionalSaudeService.buscarProfissionalPorId(idProfissional));
-            atendimento.setHorarioatendimento(horarioAtendimentoService.buscarHorarioPorId(idHorario));
-
+            atendimento.setCliente(clienteService.buscarClientePorUsuarioLogado());
+            atendimento.setProfissional(profissionalService.buscarProfissionalPorId(idProfissional));
+            atendimento.setHorarioAtendimento(horarioAtendimentoService.buscarHorarioPorId(idHorario));
+            
             //atendimentoService.salvar(atendimento);
             atendimentoService.agendarAtendimento(atendimento);
         }catch(ValidacaoException validacaoException){

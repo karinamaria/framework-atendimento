@@ -72,11 +72,11 @@ public class ProfissionalService {
 		br = validarProfissionalStrategy.validarProfissional(profissional, br);
 		
 		if(!profissional.getPessoa().getEmail().matches("^(.+)@(.+)$")){
-            br.rejectValue("email", "","E-mail inválido");
+            br.rejectValue("pessoa.email", "","E-mail inválido");
         }
 		
         if(usuarioService.loginJaExiste(profissional.getPessoa().getUsuario())){
-            br.rejectValue("usuario.login", "","Login já existe");
+            br.rejectValue("pessoa.usuario.login", "","Login já existe");
         }
         
         Pessoa pessoa = pessoaService.buscarPessoaPorEmail(profissional.getPessoa().getEmail());
@@ -178,7 +178,7 @@ public class ProfissionalService {
 			return;
 		}
 
-		if( ps.getId().equals(psLogado.getId())
+		if( ps.getId().equals(psLogado.getId()) || ps.getPessoa().getId() != psLogado.getPessoa().getId()
 				|| ps.getPessoa().getUsuario().getId().equals(psLogado.getPessoa().getUsuario().getId())) {
 			throw new AcessoNegadoException("Você não tem permissão para editar esse usuário");
 		}

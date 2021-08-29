@@ -149,7 +149,7 @@ public class PessoaService {
 
     public boolean ehCpfOuCnpjValido(String cpfOuCnpj) {
         cpfOuCnpj = cpfOuCnpj.replaceAll("\\D", "");
-
+        
         if (cpfOuCnpj.length() == 11) {
             return ehCpfValido(cpfOuCnpj);
         }

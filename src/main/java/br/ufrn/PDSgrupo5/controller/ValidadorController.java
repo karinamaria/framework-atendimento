@@ -15,28 +15,28 @@ import org.springframework.web.bind.annotation.*;
 public class ValidadorController {
     private PessoaService pessoaService;
 
-    private ProfissionalService profissionalSaudeService;
+    private ProfissionalService profissionalService;
 
     private ValidadorService validadorService;
 
     @Autowired
-    public ValidadorController(PessoaService pessoaService, ProfissionalService ps,
+    public ValidadorController(PessoaService pessoaService, ProfissionalService profissionalService,
                                ValidadorService validadorService){
         this.pessoaService = pessoaService;
-        this.profissionalSaudeService = ps;
+        this.profissionalService = profissionalService;
         this.validadorService = validadorService;
     }
 
     @GetMapping("/index")
     public String index(Model model){
         model.addAttribute(pessoaService.buscarPessoaPorUsuarioLogado());
-        model.addAttribute("profissionais", profissionalSaudeService.listarProfissionaisStatusLegalizacao(false));
+        model.addAttribute("profissionais", profissionalService.listarProfissionaisStatusLegalizacao(false));
         return "";
     }
 
     @GetMapping("/visualizarProfissional/{id}")
     public String visualizarProfissional(@PathVariable Long id, Model model){
-        model.addAttribute("profissional",profissionalSaudeService.buscarProfissionalPorId(id));
+        model.addAttribute("profissional", profissionalService.buscarProfissionalPorId(id));
 
         return "";
     }

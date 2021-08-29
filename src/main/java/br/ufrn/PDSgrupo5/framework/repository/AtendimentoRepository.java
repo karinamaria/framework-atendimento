@@ -12,9 +12,9 @@ import java.util.List;
 
 @Repository
 public interface AtendimentoRepository extends JpaRepository<Atendimento, Long> {
-    @Query(value="select a from Atendimento a where a.paciente.id=?1 and " +
+    @Query(value="select a from Atendimento a where a.cliente.id=?1 and " +
             "a.horarioAtendimento.horarioInicio > CURRENT_DATE and a.horarioAtendimento.horarioInicio < ?2")
-    List<Atendimento> buscarProximosAtendimentosPaciente(Long idPaciente, Date dataLimite);
+    List<Atendimento> buscarProximosAtendimentosCliente(Long idCliente, Date dataLimite);
 
     @Query(value="select a from Atendimento a where a.profissional.id=?1 and " +
             "a.horarioAtendimento.horarioInicio > CURRENT_DATE and a.horarioAtendimento.horarioInicio < ?2 and a.confirmado=true")
@@ -26,6 +26,6 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Long> 
     @Query(value="select a from Atendimento a where a.confirmado=true and a.requerNotificacao=true and a.horarioAtendimento.horarioInicio <= (CURRENT_DATE - ?1)")
     List<Atendimento> buscarAtendimentosRequeremNotificacao(int diasParaNotificacao);
 
-    @Query(value="select a from Atendimento a where a.confirmado=true and a.paciente.id=?1 and a.horarioAtendimento.horarioInicio > (CURRENT_DATE - ?2)")
-    List<Atendimento> buscarTodosProximosAtendimentosPaciente(Long idPaciente, int diasParaNotificacao);
+    @Query(value="select a from Atendimento a where a.confirmado=true and a.cliente.id=?1 and a.horarioAtendimento.horarioInicio > (CURRENT_DATE - ?2)")
+    List<Atendimento> buscarTodosProximosAtendimentosCliente(Long idCliente, int diasParaNotificacao);
 }

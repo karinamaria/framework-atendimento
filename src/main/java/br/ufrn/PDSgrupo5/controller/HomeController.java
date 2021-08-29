@@ -5,10 +5,10 @@ import br.ufrn.PDSgrupo5.framework.enumeration.EnumTipoPapel;
 import br.ufrn.PDSgrupo5.framework.exception.AcessoNegadoException;
 import br.ufrn.PDSgrupo5.framework.exception.ValidacaoException;
 import br.ufrn.PDSgrupo5.framework.handler.UsuarioHelper;
-import br.ufrn.PDSgrupo5.framework.model.Paciente;
+import br.ufrn.PDSgrupo5.framework.model.Cliente;
 import br.ufrn.PDSgrupo5.framework.model.Profissional;
 import br.ufrn.PDSgrupo5.framework.service.AtendimentoService;
-import br.ufrn.PDSgrupo5.framework.service.PacienteService;
+import br.ufrn.PDSgrupo5.framework.service.ClienteService;
 import br.ufrn.PDSgrupo5.framework.service.ProfissionalService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,19 +23,19 @@ import javax.validation.Valid;
 
 @Controller
 public class HomeController {
-    private PacienteService pacienteService;
+    private ClienteService clienteService;
 
-    private ProfissionalService profissionalSaudeService;
+    private ProfissionalService profissionalService;
 
     private AtendimentoService atendimentoService;
 
     private UsuarioHelper usuarioHelper;
 
     @Autowired
-    public HomeController(PacienteService pacienteService, ProfissionalService profissionalSaudeService,
+    public HomeController(ClienteService clienteService, ProfissionalService profissionalService,
                          AtendimentoService atendimento, UsuarioHelper usuarioHelper){
-        this.pacienteService = pacienteService;
-        this.profissionalSaudeService = profissionalSaudeService;
+        this.clienteService = clienteService;
+        this.profissionalService = profissionalService;
         this.atendimentoService = atendimento;
         this.usuarioHelper = usuarioHelper;
     }
@@ -43,11 +43,11 @@ public class HomeController {
     @RequestMapping("/dashboard")
     public String dashBoard(Model model){
         if(usuarioHelper.getUsuarioLogado().getEnumTipoPapel().equals(EnumTipoPapel.VALIDADOR)){
-            model.addAttribute("profissionais", profissionalSaudeService.listarProfissionaisStatusLegalizacao(false));
+            model.addAttribute("profissionais", profissionalService.listarProfissionaisStatusLegalizacao(false));
         }
-        else if(usuarioHelper.getUsuarioLogado().getEnumTipoPapel().equals(EnumTipoPapel.PACIENTE)){
-            model.addAttribute("profissionais", profissionalSaudeService.listarProfissionaisStatusLegalizacao(true));
-            model.addAttribute("proximosAtendimentos", atendimentoService.buscarProximosAtendimentosPaciente());
+        else if(usuarioHelper.getUsuarioLogado().getEnumTipoPapel().equals(EnumTipoPapel.CLIENTE)){
+            model.addAttribute("profissionais", profissionalService.listarProfissionaisStatusLegalizacao(true));
+            model.addAttribute("proximosAtendimentos", atendimentoService.buscarProximosAtendimentosCliente());
         }
         else{
             model.addAttribute("atendimentosStatusPendente", atendimentoService.buscarAtendimentosAguardandoConfirmacao());
@@ -59,12 +59,12 @@ public class HomeController {
     @RequestMapping("/login")
     public String login(Model model){
 
-        if(!model.containsAttribute("paciente")){
-            model.addAttribute("paciente",new Paciente());
+        if(!model.containsAttribute("cliente")){
+            model.addAttribute("cliente",new Cliente());
         }
-        if(!model.containsAttribute("profissionalSaude")){
+        if(!model.containsAttribute("profissional")){
         	Profissional p = new ProfissionalSaude(); 
-            model.addAttribute("profissionalSaude", p);
+            model.addAttribute("profissional", p);
         }
 
         if(!model.containsAttribute("active_tab")){
@@ -80,19 +80,19 @@ public class HomeController {
     }
 
     @PostMapping("/novo-paciente/salvar")
-    public String novoPaciente(@Valid Paciente paciente, BindingResult br, RedirectAttributes ra){
+    public String novoPaciente(@Valid Cliente paciente, BindingResult br, RedirectAttributes ra){
         try{
-            pacienteService.verificarPermissao(paciente);
-            pacienteService.validarPaciente(paciente, br);
-            pacienteService.salvarPaciente(paciente);
+            clienteService.verificarPermissao(paciente);
+            clienteService.validarCliente(paciente, br);
+            clienteService.salvarCliente(paciente);
             ra.addFlashAttribute("active_tab",null); //ir para página de login
         }catch(AcessoNegadoException ne){
             return "error/401.html";//o usuário não tem permissão para editar outro candidato. Apresente página de erro
         }catch(ValidacaoException validacaoException){
-            ra.addFlashAttribute("org.springframework.validation.BindingResult.paciente", validacaoException.getBindingResult());
+            ra.addFlashAttribute("org.springframework.validation.BindingResult.cliente", validacaoException.getBindingResult());
             ra.addFlashAttribute("message", "Erro ao salvar paciente");
-            ra.addFlashAttribute("paciente",paciente);
-            ra.addFlashAttribute("active_tab","paciente");
+            ra.addFlashAttribute("cliente", paciente);
+            ra.addFlashAttribute("active_tab", "cliente");
         }
 
         return "redirect:/login";
@@ -104,17 +104,17 @@ public class HomeController {
     	Profissional p = profissionalSaude;
     	
     	try{
-            profissionalSaudeService.verificarPermissao(p);
-            profissionalSaudeService.validarDados(p, br);
-            profissionalSaudeService.salvarProfissional(p);
+            profissionalService.verificarPermissao(p);
+            profissionalService.validarDados(p, br);
+            profissionalService.salvarProfissional(p);
             ra.addFlashAttribute("active_tab",null);
         }catch(AcessoNegadoException ne){
             return "error/401.html";//usuário não tem permissão para edição
         }catch(ValidacaoException validacaoException){
-            ra.addFlashAttribute("org.springframework.validation.BindingResult.profissionalSaude", validacaoException.getBindingResult());
+            ra.addFlashAttribute("org.springframework.validation.BindingResult.profissional", validacaoException.getBindingResult());
             ra.addFlashAttribute("message", "Erro ao salvar profissional da saúde");
-            ra.addFlashAttribute("profissionalSaude",p);
-            ra.addFlashAttribute("active_tab","profissional");
+            ra.addFlashAttribute("profissional", p);
+            ra.addFlashAttribute("active_tab", "profissional");
         }
 
         return "redirect:/login";

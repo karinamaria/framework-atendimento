@@ -18,7 +18,7 @@
     <!-- fim validador -->
 
     <!-- inicio paciente -->
-    <div class="container-fluid" th:if="${isPaciente}">
+    <div class="container-fluid" th:if="${isCliente}">
         <div th:replace="fragments/layout_dashboard :: pacienteDashboard"></div>
     </div>
     <!-- fim paciente -->

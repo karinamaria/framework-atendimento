@@ -17,10 +17,10 @@ public class NotificacaoStrategyProfissionalSaude implements NotificacaoStrategy
 
 	@Override
 	public String construirMensagemNotificacao(Atendimento a) {
-		String saudacao = "Olá, " + a.getPaciente().getPessoa().getNome() + ", tudo bem?";
+		String saudacao = "Olá, " + a.getCliente().getPessoa().getNome() + ", tudo bem?";
 		
 		ProfissionalSaude ps = (ProfissionalSaude) a.getProfissional();
-		String texto = "Notamos que já faz um tempo desde seu atendimento com o "
+		String texto = "Notamos que já faz um tempo desde seu atendimento com "
 						+ a.getProfissional().getPessoa().getNome()
 						+ " (" + ps.getEnumTipoRegistro().getDescricao() + ")."
 						+ " De acordo com nossa programação, esse período é ideal para realizar um retorno."

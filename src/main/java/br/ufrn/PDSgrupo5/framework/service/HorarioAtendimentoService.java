@@ -13,23 +13,23 @@ import java.util.List;
 
 @Service
 public class HorarioAtendimentoService {
-	private ProfissionalService profissionalSaudeService;
+	private ProfissionalService profissionalService;
 	private DataHoraService dataHoraService;
 	private HorarioAtendimentoRepository horarioAtendimentoRepository;
 	private final VagasHorarioAtendimentoStrategy validarHorarioAtendimentoStrategy;
 	
 	@Autowired
-	public HorarioAtendimentoService(ProfissionalService profissionalSaudeService, DataHoraService dataHoraService,
+	public HorarioAtendimentoService(ProfissionalService profissionalService, DataHoraService dataHoraService,
 									 HorarioAtendimentoRepository horarioAtendimentoRepository,
 									 VagasHorarioAtendimentoStrategy validarHorarioAtendimentoStrategy) {
-		this.profissionalSaudeService = profissionalSaudeService;
+		this.profissionalService = profissionalService;
 		this.dataHoraService = dataHoraService;
 		this.horarioAtendimentoRepository = horarioAtendimentoRepository;
 		this.validarHorarioAtendimentoStrategy = validarHorarioAtendimentoStrategy;
 	}
 	
 	public Profissional salvar(HorarioAtendimento ha) {
-		return profissionalSaudeService.adicionarHorarioAtendimento(ha);
+		return profissionalService.adicionarHorarioAtendimento(ha);
 	}
 
 	public HorarioAtendimento salvarHorario(HorarioAtendimento ha){
@@ -49,7 +49,7 @@ public class HorarioAtendimentoService {
 			throw new ValidacaoException("A data início do atendimento deve ser posterior a data atual");
 		}
 
-		List<HorarioAtendimento> horarios = profissionalSaudeService.buscarHorariosAtendimento();
+		List<HorarioAtendimento> horarios = profissionalService.buscarHorariosAtendimento();
 		for(HorarioAtendimento horario : horarios ) {
 			if( horariosTemChoque(ha, horario) ) {
 				throw new ValidacaoException("Choque entre horários. Verifique seus horários já cadastrados.");
@@ -92,7 +92,7 @@ public class HorarioAtendimentoService {
 	 */
 	public HorarioAtendimento ocuparVaga(HorarioAtendimento horarioAtendimento) throws ValidacaoException {
 		int quantidadeVagas = validarHorarioAtendimentoStrategy.calcularVagasHorarioAtendimento(horarioAtendimento);
-
+			
 		if(quantidadeVagas == 0){
 			throw new ValidacaoException("Não há mais vagas para esse horário de atendimento. Por favor, escolha outro.");
 		}

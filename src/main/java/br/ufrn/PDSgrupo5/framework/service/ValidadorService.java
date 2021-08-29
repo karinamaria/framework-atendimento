@@ -8,18 +8,19 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ValidadorService {
-    private ProfissionalService profissionalSaudeService;
+    private ProfissionalService profissionalService;
 
     @Autowired
     public ValidadorService(ProfissionalService ps){
-        this.profissionalSaudeService = ps;
+        this.profissionalService = ps;
     }
+    
     public void salvarEdicaoProfissionalSaude(Long idProfissional, boolean autorizacao, EnumSituacaoProfissionalSaude justificativa){
-        Profissional psAuxiliar = profissionalSaudeService.buscarProfissionalPorId(idProfissional);
+        Profissional psAuxiliar = profissionalService.buscarProfissionalPorId(idProfissional);
 
         psAuxiliar.setSituacaoProfissionalSaude(justificativa);
         psAuxiliar.setLegalizado(autorizacao);
 
-        profissionalSaudeService.salvar(psAuxiliar);
+        profissionalService.salvar(psAuxiliar);
     }
 }

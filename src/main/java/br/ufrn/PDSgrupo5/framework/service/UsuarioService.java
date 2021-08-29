@@ -28,7 +28,7 @@ public class UsuarioService {
     }
 
     public Usuario prepararUsuarioParaCriacao(Usuario usuario){
-        usuario.setEnumTipoPapel(EnumTipoPapel.PACIENTE);
+        usuario.setEnumTipoPapel(EnumTipoPapel.CLIENTE);
         usuario.setSenha(new BCryptPasswordEncoder().encode(usuario.getSenha()));
 
         return usuario;

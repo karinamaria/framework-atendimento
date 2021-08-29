@@ -27,7 +27,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/index").permitAll()
                 .antMatchers("/novo-paciente/salvar").permitAll()
                 .antMatchers("/novo-profissional/salvar").permitAll()
-                .antMatchers("/paciente/**").hasAuthority(EnumTipoPapel.PACIENTE.getDescricao())
+                .antMatchers("/paciente/**").hasAuthority(EnumTipoPapel.CLIENTE.getDescricao())
                 .antMatchers("/profissional-saude/**").hasAuthority(EnumTipoPapel.PROFISSIONAL.getDescricao())
                 .antMatchers("/validador/**").hasAuthority(EnumTipoPapel.VALIDADOR.getDescricao())
                 .anyRequest().authenticated();

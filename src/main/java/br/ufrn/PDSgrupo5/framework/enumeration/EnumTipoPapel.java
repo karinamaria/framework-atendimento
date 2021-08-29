@@ -1,7 +1,7 @@
 package br.ufrn.PDSgrupo5.framework.enumeration;
 
 public enum EnumTipoPapel {
-	PACIENTE("Paciente"), PROFISSIONAL("Profissional"), VALIDADOR("Validador");
+	CLIENTE("Cliente"), PROFISSIONAL("Profissional"), VALIDADOR("Validador");
 
 	private String descricao;
 

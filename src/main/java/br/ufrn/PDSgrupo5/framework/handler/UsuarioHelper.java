@@ -43,10 +43,10 @@ public class UsuarioHelper {
         return null;
     }
 
-    @ModelAttribute("isPaciente")
-    public boolean verificaPapelPaciente(){
+    @ModelAttribute("isCliente")
+    public boolean verificaPapelCliente(){
         if(getUsuarioLogado() != null){
-            return getUsuarioLogado().getEnumTipoPapel().equals(EnumTipoPapel.PACIENTE);
+            return getUsuarioLogado().getEnumTipoPapel().equals(EnumTipoPapel.CLIENTE);
         }
         return false;
     }

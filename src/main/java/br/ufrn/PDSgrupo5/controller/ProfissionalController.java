@@ -39,8 +39,8 @@ public class ProfissionalController {
 	
 	@GetMapping("/form")
 	public String form(Model model) {
-		if(!model.containsAttribute("profissionalSaude")) {
-			model.addAttribute(new ProfissionalSaude());
+		if(!model.containsAttribute("profissional")) {
+			model.addAttribute("profissional", new ProfissionalSaude());
 		}
 		
 		return "profissional-saude/form";
@@ -67,7 +67,7 @@ public class ProfissionalController {
     //o usuário edita seu próprio cadastro
     @GetMapping("/editar")
     public String editar(Model model) {
-        model.addAttribute(profissionalService.buscarProfissionalPorUsuarioLogado());
+        model.addAttribute("profissional", profissionalService.buscarProfissionalPorUsuarioLogado());
         return "profissional-saude/form";
     }
 

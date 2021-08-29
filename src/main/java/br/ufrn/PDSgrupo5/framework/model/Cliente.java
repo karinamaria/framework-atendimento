@@ -6,13 +6,13 @@ import javax.persistence.*;
 
 @ApiIgnore
 @Entity
-@Table(name = "paciente")
-public class Paciente extends EntidadeAbstrata {
+@Table(name = "cliente")
+public class Cliente extends EntidadeAbstrata {
 
 	@OneToOne(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	private Pessoa pessoa;
 
-	public Paciente() {
+	public Cliente() {
 	}
 
 	public Pessoa getPessoa() {

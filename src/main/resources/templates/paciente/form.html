@@ -10,7 +10,7 @@
     <th:block layout:fragment="content">
         <div class="pacienteForm container-fluid">
             <h2 class="text-secondary mt-4 mb-4 text-center">Editar Paciente</h2>
-            <form class="ml-md-5 mr-md-5 mb-5" method="POST" th:object="${paciente}" th:action="@{/paciente/salvar}">
+            <form class="ml-md-5 mr-md-5 mb-5" method="POST" th:object="${cliente}" th:action="@{/paciente/salvar}">
 
                 <div th:if="${message}" class="alert alert-danger alert-dismissible fade show" role="alert">
                     [[${message}]]
@@ -38,22 +38,12 @@
                         <input class="form-control" id="cpfPacienteInput" type="text" th:field="*{pessoa.cpfOuCnpj}"
                                data-mask="000.000.000-00" data-mask-reverse="true"required="required"/>
                         <div style="color: red;">
-                            <div th:if="${#fields.hasErrors('pessoa.cpf')}"
+                            <div th:if="${#fields.hasErrors('pessoa.cpfOuCnpj')}"
                                  th:errors="*{pessoa.cpfOuCnpj}">errors
                             </div>
                         </div>
                     </div>
-                    <!--<div class="form-group col-md-4">
-                        <label for="sexoInput">Sexo</label>
-                        <select class="form-control" th:field="*{pessoa.sexo}" id="sexoInput" required>
-                            <option value="F">Feminino</option>
-                            <option value="M">Masculino</option>
-                        </select>
-                    </div> -->
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                         <label for="emailPacienteInput">E-mail</label> <input
                             class="form-control" id="emailPacienteInput" type="text"
                             th:field="*{pessoa.email}" required="required"/>
@@ -63,16 +53,6 @@
                             </div>
                         </div>
                     </div>
-                    <!--<div class="form-group col-md-6">
-                        <label for="DataNascimentoPacienteInput">Data Nascimento</label> <input
-                            class="form-control" id="DataNascimentoPacienteInput" type="date"
-                            th:field="*{pessoa.dataNascimento}" required="required"/>
-                        <div style="color: red;">
-                            <div th:if="${#fields.hasErrors('pessoa.dataNascimento')}"
-                                 th:errors="*{pessoa.dataNascimento}">errors
-                            </div>
-                        </div>
-                    </div>-->
                 </div>
 
                 <div class="form-row border-bottom my-5">

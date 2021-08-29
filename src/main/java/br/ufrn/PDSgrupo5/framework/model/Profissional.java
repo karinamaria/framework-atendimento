@@ -25,6 +25,8 @@ public class Profissional extends EntidadeAbstrata {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "pessoa_id", referencedColumnName = "id")
     private Pessoa pessoa;
+    
+    private String descricao;
 
     public List<HorarioAtendimento> getHorarioAtendimento() {
         return horarioAtendimento;
@@ -57,4 +59,12 @@ public class Profissional extends EntidadeAbstrata {
     public void setPessoa(Pessoa pessoa) {
         this.pessoa = pessoa;
     }
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
 }
