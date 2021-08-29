@@ -4,7 +4,7 @@ import br.ufrn.PDSgrupo5.framework.exception.ValidacaoException;
 import br.ufrn.PDSgrupo5.framework.model.HorarioAtendimento;
 import br.ufrn.PDSgrupo5.framework.model.Profissional;
 import br.ufrn.PDSgrupo5.framework.repository.HorarioAtendimentoRepository;
-
+import br.ufrn.PDSgrupo5.framework.strategy.VagasHorarioAtendimentoStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +16,16 @@ public class HorarioAtendimentoService {
 	private ProfissionalService profissionalSaudeService;
 	private DataHoraService dataHoraService;
 	private HorarioAtendimentoRepository horarioAtendimentoRepository;
+	private final VagasHorarioAtendimentoStrategy validarHorarioAtendimentoStrategy;
 	
 	@Autowired
 	public HorarioAtendimentoService(ProfissionalService profissionalSaudeService, DataHoraService dataHoraService,
-									 HorarioAtendimentoRepository horarioAtendimentoRepository) {
+									 HorarioAtendimentoRepository horarioAtendimentoRepository,
+									 VagasHorarioAtendimentoStrategy validarHorarioAtendimentoStrategy) {
 		this.profissionalSaudeService = profissionalSaudeService;
 		this.dataHoraService = dataHoraService;
 		this.horarioAtendimentoRepository = horarioAtendimentoRepository;
+		this.validarHorarioAtendimentoStrategy = validarHorarioAtendimentoStrategy;
 	}
 	
 	public Profissional salvar(HorarioAtendimento ha) {
@@ -77,5 +80,13 @@ public class HorarioAtendimentoService {
 
 	public HorarioAtendimento buscarHorarioPorId(Long id) {
 		return horarioAtendimentoRepository.findById(id).get();
+	}
+
+	public void ocuparVaga(HorarioAtendimento horarioAtendimento) throws ValidacaoException {
+		int quantidadeVagas = validarHorarioAtendimentoStrategy.calcularVagasHorarioAtendimento(horarioAtendimento);
+
+		if(quantidadeVagas == 0){
+			throw new ValidacaoException("Não há mais vagas para esse horário de atendimento. Por favor, escolha outro.");
+		}
 	}
 }

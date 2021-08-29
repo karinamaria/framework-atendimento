@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 
 import br.ufrn.PDSgrupo5.extensions.model.ProfissionalSaude;
 import br.ufrn.PDSgrupo5.framework.model.Atendimento;
-import br.ufrn.PDSgrupo5.framework.service.NotificacaoStrategy;
+import br.ufrn.PDSgrupo5.framework.strategy.NotificacaoStrategy;
 
 @Service
 public class NotificacaoStrategyProfissionalSaude implements NotificacaoStrategy {

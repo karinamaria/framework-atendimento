@@ -2,6 +2,7 @@ package br.ufrn.PDSgrupo5.framework.service;
 
 import java.util.List;
 
+import br.ufrn.PDSgrupo5.framework.strategy.NotificacaoStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;

@@ -16,6 +16,7 @@ import br.ufrn.PDSgrupo5.framework.model.Usuario;
 import br.ufrn.PDSgrupo5.framework.repository.HorarioAtendimentoRepository;
 import br.ufrn.PDSgrupo5.framework.repository.ProfissionalRepository;
 
+import br.ufrn.PDSgrupo5.framework.strategy.ValidarProfissionalStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;

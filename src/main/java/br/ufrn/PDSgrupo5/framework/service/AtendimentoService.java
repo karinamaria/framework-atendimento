@@ -5,6 +5,7 @@ import br.ufrn.PDSgrupo5.framework.model.HorarioAtendimento;
 import br.ufrn.PDSgrupo5.framework.model.Profissional;
 import br.ufrn.PDSgrupo5.framework.repository.AtendimentoRepository;
 
+import br.ufrn.PDSgrupo5.framework.strategy.NotificacaoStrategy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;

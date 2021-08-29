@@ -6,7 +6,7 @@ import org.springframework.validation.BindingResult;
 import br.ufrn.PDSgrupo5.extensions.model.ProfissionalSaude;
 import br.ufrn.PDSgrupo5.framework.model.Profissional;
 import br.ufrn.PDSgrupo5.framework.service.PessoaService;
-import br.ufrn.PDSgrupo5.framework.service.ValidarProfissionalStrategy;
+import br.ufrn.PDSgrupo5.framework.strategy.ValidarProfissionalStrategy;
 
 import java.util.Objects;
 

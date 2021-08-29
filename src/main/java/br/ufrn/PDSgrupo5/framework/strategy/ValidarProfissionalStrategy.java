@@ -1,4 +1,4 @@
-package br.ufrn.PDSgrupo5.framework.service;
+package br.ufrn.PDSgrupo5.framework.strategy;
 
 import org.springframework.validation.BindingResult;
 
