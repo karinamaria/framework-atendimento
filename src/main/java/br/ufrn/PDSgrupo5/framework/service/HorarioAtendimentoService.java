@@ -82,11 +82,15 @@ public class HorarioAtendimentoService {
 		return horarioAtendimentoRepository.findById(id).get();
 	}
 
-	public void ocuparVaga(HorarioAtendimento horarioAtendimento) throws ValidacaoException {
+	public HorarioAtendimento ocuparVaga(HorarioAtendimento horarioAtendimento) throws ValidacaoException {
 		int quantidadeVagas = validarHorarioAtendimentoStrategy.calcularVagasHorarioAtendimento(horarioAtendimento);
 
 		if(quantidadeVagas == 0){
 			throw new ValidacaoException("Não há mais vagas para esse horário de atendimento. Por favor, escolha outro.");
 		}
+		if(quantidadeVagas == 1){
+			horarioAtendimento.setLivre(false);
+		}
+		return horarioAtendimento;
 	}
 }
