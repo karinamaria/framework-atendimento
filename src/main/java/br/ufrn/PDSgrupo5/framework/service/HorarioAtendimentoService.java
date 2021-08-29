@@ -82,6 +82,14 @@ public class HorarioAtendimentoService {
 		return horarioAtendimentoRepository.findById(id).get();
 	}
 
+	/**
+	 * O método 'ocuparVaga' é responsável por fechar o recebimento de atendimentos
+	 * para determinado horário de atendimento
+	 * @param horarioAtendimento que deseja agendar o atendimento
+	 * @return o horário de atendimento
+	 * @throws ValidacaoException exceção lançada quando usuário tenta agendar atendimento
+	 * em um horário que não está livre
+	 */
 	public HorarioAtendimento ocuparVaga(HorarioAtendimento horarioAtendimento) throws ValidacaoException {
 		int quantidadeVagas = validarHorarioAtendimentoStrategy.calcularVagasHorarioAtendimento(horarioAtendimento);
 

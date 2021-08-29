@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -96,15 +97,19 @@ public class PacienteController {
     
     @PostMapping("/agendarAtendimento")
     public String agendarAtendimento(@RequestParam("horarioAtendimentoId") Long idHorario, @RequestParam("profissionalId") Long idProfissional,
-    							     @Valid Atendimento atendimento) {
-    	atendimento.setPaciente(pacienteService.buscarPacientePorUsuarioLogado());
-    	atendimento.setProfissional(profissionalSaudeService.buscarProfissionalPorId(idProfissional));
-    	
-    	horarioAtendimentoService.buscarHorarioPorId(idHorario).setLivre(false);
-    	atendimento.setHorarioatendimento(horarioAtendimentoService.buscarHorarioPorId(idHorario));
-    	
-    	atendimentoService.salvar(atendimento);
-    	
+                                     @Valid Atendimento atendimento, RedirectAttributes ra) {
+    	try{
+            atendimento.setPaciente(pacienteService.buscarPacientePorUsuarioLogado());
+            atendimento.setProfissional(profissionalSaudeService.buscarProfissionalPorId(idProfissional));
+            atendimento.setHorarioatendimento(horarioAtendimentoService.buscarHorarioPorId(idHorario));
+
+            //atendimentoService.salvar(atendimento);
+            atendimentoService.agendarAtendimento(atendimento);
+        }catch(ValidacaoException validacaoException){
+            ra.addFlashAttribute("message", validacaoException.getMessage());
+            ra.addFlashAttribute("atendimento",atendimento);
+        }
+
     	return "redirect:/dashboard";
     }
 }

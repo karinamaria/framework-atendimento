@@ -1,5 +1,6 @@
 package br.ufrn.PDSgrupo5.framework.service;
 
+import br.ufrn.PDSgrupo5.framework.exception.ValidacaoException;
 import br.ufrn.PDSgrupo5.framework.model.Atendimento;
 import br.ufrn.PDSgrupo5.framework.model.HorarioAtendimento;
 import br.ufrn.PDSgrupo5.framework.model.Profissional;
@@ -62,10 +63,22 @@ public class AtendimentoService {
         return Date.from(dataMaisQuinzeDias.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
-    public void aceitarRecusarAtendimento(Long id, boolean autorizacao) {
-        Atendimento atendimento = atendimentoRepository.getById(id);
+    public void agendarAtendimento(Atendimento atendimento) throws ValidacaoException {
+        atendimento.setHorarioatendimento(
+                horarioAtendimentoService.ocuparVaga(atendimento.getHorarioAtendimento())
+        );
+        salvar(atendimento);
+    }
 
-        if(autorizacao){//atendimento autorizado
+    /**
+     * Método que é usado quando um profissional deseja aceitar ou recusar atendimento
+     * @param idAtendimento representa o ID do atendimento que terá estado modificado
+     * @param ehAtendimentoAutorizado boolean que indica se atendimento foi autorizado
+     */
+    public void aceitarRecusarAtendimento(Long idAtendimento, boolean ehAtendimentoAutorizado) {
+        Atendimento atendimento = atendimentoRepository.getById(idAtendimento);
+
+        if(ehAtendimentoAutorizado){//atendimento autorizado
             atendimento.setConfirmado(true);
             atendimentoRepository.save(atendimento);
         }else{
@@ -75,7 +88,12 @@ public class AtendimentoService {
             atendimentoRepository.delete(atendimento);
         }
     }
-    
+
+    /**
+     * Método responsável por buscar todos os atendimentos que precisam
+     * receber uma notificação de retorno
+     * @return uma lista de atendimentos que receberão notificação
+     */
     public List<Atendimento> buscarAtendimentosRequeremNotificacao(){
         List<Atendimento> atendimentos = atendimentoRepository.buscarAtendimentosRequeremNotificacao(notificacaoStrategy.obterDiasParaNotificacao());
         
@@ -103,9 +121,5 @@ public class AtendimentoService {
         	}
         }
         return requerNotificacao;
-        
-//        return todosProximosAtendimentos == null || todosProximosAtendimentos.isEmpty()? true : todosProximosAtendimentos.stream()
-//                .filter(atendimento -> atendimento.getProfissionalSaude().equals(a.getProfissionalSaude()))
-//                .count() != 0;
     }
 }
