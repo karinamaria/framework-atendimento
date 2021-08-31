@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name = "atendimento")
 public class Atendimento extends EntidadeAbstrata {
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.MERGE)
 	private HorarioAtendimento horarioAtendimento;
 
 	private String titulo;
@@ -19,7 +19,7 @@ public class Atendimento extends EntidadeAbstrata {
 	@OneToOne
 	private Cliente cliente;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.MERGE)
 	private Profissional profissional;
 
 	@Column(name="tipo_atendimento")

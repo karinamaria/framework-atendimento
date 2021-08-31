@@ -101,12 +101,10 @@ public class HomeController {
     @PostMapping("/novo-profissional/salvar")
     public String novoProfissionalSaude(@Valid ProfissionalSaude profissionalSaude, BindingResult br, RedirectAttributes ra){
         
-    	Profissional p = profissionalSaude;
+//    	Profissional p = profissionalSaude;
     	
     	try{
-            profissionalService.verificarPermissao(profissionalSaude);
-            profissionalService.validarDados(profissionalSaude, br);
-            profissionalService.salvarProfissional(profissionalSaude);
+            profissionalService.inserirProfissional(profissionalSaude, br);
             ra.addFlashAttribute("active_tab",null);
         }catch(AcessoNegadoException ne){
             return "error/401.html";//usuário não tem permissão para edição

@@ -2,11 +2,8 @@ package br.ufrn.PDSgrupo5.controller;
 
 import br.ufrn.PDSgrupo5.extensions.model.ProfissionalSaude;
 import br.ufrn.PDSgrupo5.framework.exception.ValidacaoException;
-import br.ufrn.PDSgrupo5.framework.model.HorarioAtendimento;
 import br.ufrn.PDSgrupo5.framework.model.Profissional;
 import br.ufrn.PDSgrupo5.framework.service.AtendimentoService;
-import br.ufrn.PDSgrupo5.framework.service.DataHoraService;
-import br.ufrn.PDSgrupo5.framework.service.HorarioAtendimentoService;
 import br.ufrn.PDSgrupo5.framework.service.ProfissionalService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,22 +15,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.text.ParseException;
-import java.util.Date;
 
 @Controller
 @RequestMapping("profissional-saude")
 public class ProfissionalController {
 	private ProfissionalService profissionalService;
-	private HorarioAtendimentoService horarioAtendimentoService;
-	private DataHoraService dataHoraService;
 	private AtendimentoService atendimentoService;
 	
 	@Autowired
-	ProfissionalController(ProfissionalService profissionalService, HorarioAtendimentoService horarioAtendimentoService,
-								DataHoraService dataHoraService, AtendimentoService atendimentoService){
-		this.profissionalService = profissionalService;
-		this.horarioAtendimentoService = horarioAtendimentoService;
-		this.dataHoraService = dataHoraService;
+	ProfissionalController(ProfissionalService profissionalService,
+						AtendimentoService atendimentoService){
+		this.profissionalService = profissionalService;;
 		this.atendimentoService = atendimentoService;
 	}
 	
@@ -111,13 +103,8 @@ public class ProfissionalController {
     								  @RequestParam("horaFim") String horaFim, Model model) {
     	
 		try {
-			Date horarioInicio = dataHoraService.converterParaDate(data, horaInicio);
-			Date horarioFim = dataHoraService.converterParaDate(data, horaFim);
-			HorarioAtendimento ha = horarioAtendimentoService.converterParaHorarioAtendimento(horarioInicio, horarioFim, preco);
 			
-			horarioAtendimentoService.validarHorario(ha);
-
-			profissionalService.adicionarHorarioAtendimento(ha);
+			profissionalService.inserirHorarioAtendimento(data, preco, horaInicio, horaFim);
 			
 		} catch (ParseException e) {
 			return "redirect:/profissional-saude/error";

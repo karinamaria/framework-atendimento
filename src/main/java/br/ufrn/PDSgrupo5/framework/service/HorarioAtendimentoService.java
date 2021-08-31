@@ -2,38 +2,35 @@ package br.ufrn.PDSgrupo5.framework.service;
 
 import br.ufrn.PDSgrupo5.framework.exception.ValidacaoException;
 import br.ufrn.PDSgrupo5.framework.model.HorarioAtendimento;
-import br.ufrn.PDSgrupo5.framework.model.Profissional;
 import br.ufrn.PDSgrupo5.framework.repository.HorarioAtendimentoRepository;
 import br.ufrn.PDSgrupo5.framework.strategy.VagasHorarioAtendimentoStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 @Service
 public class HorarioAtendimentoService {
-	private ProfissionalService profissionalService;
-	private DataHoraService dataHoraService;
 	private HorarioAtendimentoRepository horarioAtendimentoRepository;
 	private final VagasHorarioAtendimentoStrategy validarHorarioAtendimentoStrategy;
 	
 	@Autowired
-	public HorarioAtendimentoService(ProfissionalService profissionalService, DataHoraService dataHoraService,
-									 HorarioAtendimentoRepository horarioAtendimentoRepository,
+	public HorarioAtendimentoService(HorarioAtendimentoRepository horarioAtendimentoRepository,
 									 VagasHorarioAtendimentoStrategy validarHorarioAtendimentoStrategy) {
-		this.profissionalService = profissionalService;
-		this.dataHoraService = dataHoraService;
 		this.horarioAtendimentoRepository = horarioAtendimentoRepository;
 		this.validarHorarioAtendimentoStrategy = validarHorarioAtendimentoStrategy;
-	}
-	
-	public Profissional salvar(HorarioAtendimento ha) {
-		return profissionalService.adicionarHorarioAtendimento(ha);
 	}
 
 	public HorarioAtendimento salvarHorario(HorarioAtendimento ha){
 		return horarioAtendimentoRepository.save(ha);
+	}
+	
+	public void apagarHorarioAtendimento(Long idHorarioAtendimento) {
+		horarioAtendimentoRepository.delete(horarioAtendimentoRepository.findById(idHorarioAtendimento).get());
 	}
 	
 	public void validarHorario(HorarioAtendimento ha) throws ValidacaoException{
@@ -48,8 +45,9 @@ public class HorarioAtendimentoService {
 		if(ha.getHorarioInicio().before(new Date())){
 			throw new ValidacaoException("A data início do atendimento deve ser posterior a data atual");
 		}
-
-		List<HorarioAtendimento> horarios = profissionalService.buscarHorariosAtendimento();
+	}
+	
+	public void verificarChoqueEntreHorarios(HorarioAtendimento ha, List<HorarioAtendimento> horarios) throws ValidacaoException {
 		for(HorarioAtendimento horario : horarios ) {
 			if( horariosTemChoque(ha, horario) ) {
 				throw new ValidacaoException("Choque entre horários. Verifique seus horários já cadastrados.");
@@ -57,12 +55,19 @@ public class HorarioAtendimentoService {
 		}
 	}
 	
+	public HorarioAtendimento construirHorarioAtendimento(String data, Double preco, String horaInicio, String horaFim) throws ParseException {
+		Date horarioInicio = converterParaDate(data, horaInicio);
+		Date horarioFim = converterParaDate(data, horaFim);
+		
+		return converterParaHorarioAtendimento(horarioInicio, horarioFim, preco);
+	}
+	
 	public HorarioAtendimento converterParaHorarioAtendimento(Date horarioInicio, Date horarioFim, Double preco) {	
 		HorarioAtendimento ha = new HorarioAtendimento();
     	ha.setHorarioInicio(horarioInicio);
     	ha.setHorarioFim(horarioFim);
     	ha.setPreco(preco);
-    	ha.setDiaSemana(dataHoraService.getDiaSemana(horarioInicio));
+    	ha.setDiaSemana(obterDiaSemana(horarioInicio));
     	
 		return ha;
 	}
@@ -100,5 +105,44 @@ public class HorarioAtendimentoService {
 			horarioAtendimento.setLivre(false);
 		}
 		return horarioAtendimento;
+	}
+	
+	private Date converterParaDate(String data, String hora) throws ParseException {
+		String stringData = data + " " + hora;
+		SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Date dataDate = formato.parse(stringData);
+		
+		return dataDate;
+	}
+	
+	private String obterDiaSemana(Date data) {
+		GregorianCalendar gc = new GregorianCalendar();
+    	gc.setTime(data);
+    	int dia = gc.get(GregorianCalendar.DAY_OF_WEEK);
+
+    	String diaSemana;
+		switch(dia) {
+			case 1:
+				diaSemana = "Domingo";
+				break;
+			case 2:
+				diaSemana = "Segunda-feira";
+				break;
+			case 3:
+				diaSemana = "Terça-feira";
+				break;
+			case 4:
+				diaSemana = "Quarta-feira";
+				break;
+			case 5:
+				diaSemana = "Quinta-feira";
+				break;
+			case 6:
+				diaSemana = "Sexta-feira";
+				break;
+			default: //case 7:
+				diaSemana = "Sábado";
+		}
+		return diaSemana;
 	}
 }

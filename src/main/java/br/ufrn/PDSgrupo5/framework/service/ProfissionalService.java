@@ -9,7 +9,6 @@ import br.ufrn.PDSgrupo5.framework.model.HorarioAtendimento;
 import br.ufrn.PDSgrupo5.framework.model.Pessoa;
 import br.ufrn.PDSgrupo5.framework.model.Profissional;
 import br.ufrn.PDSgrupo5.framework.model.Usuario;
-import br.ufrn.PDSgrupo5.framework.repository.HorarioAtendimentoRepository;
 import br.ufrn.PDSgrupo5.framework.repository.ProfissionalRepository;
 import br.ufrn.PDSgrupo5.framework.strategy.ValidarProfissionalStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,24 +26,24 @@ public class ProfissionalService {
 	private final ProfissionalRepository profissionalRepository;
 
 	private final UsuarioHelper usuarioHelper;
-
-	private final HorarioAtendimentoRepository horarioAtendimentoRepository;
 	
 	private final ValidarProfissionalStrategy validarProfissionalStrategy;
 
 	private final PessoaService pessoaService;
 	
+	private final HorarioAtendimentoService horarioAtendimentoService;
+	
 	@Autowired
 	public ProfissionalService(ProfissionalRepository profissionalRepository,
 									UsuarioHelper usuarioHelper,
-									HorarioAtendimentoRepository hr,
 									ValidarProfissionalStrategy validarProfissionalStrategy,
-							   		PessoaService pessoaService) {
+							   		PessoaService pessoaService,
+							   		HorarioAtendimentoService horarioAtendimentoService) {
 		this.profissionalRepository = profissionalRepository;
 		this.usuarioHelper = usuarioHelper;
-		this.horarioAtendimentoRepository = hr;
 		this.validarProfissionalStrategy = validarProfissionalStrategy;
 		this.pessoaService = pessoaService;
+		this.horarioAtendimentoService = horarioAtendimentoService;
 	}
 	
 	public Profissional salvar(Profissional ps) {
@@ -62,6 +62,12 @@ public class ProfissionalService {
 		}
 
 		salvar(ps);
+	}
+	
+	public void inserirProfissional(Profissional p, BindingResult br) throws AcessoNegadoException, ValidacaoException {
+		verificarPermissao(p);
+        validarDados(p, br);
+        salvarProfissional(p);
 	}
 
 	public Usuario prepararUsuarioProfissional(Usuario usuario){
@@ -130,16 +136,19 @@ public class ProfissionalService {
 	public Profissional buscarProfissionalPorId(Long id){
 		return profissionalRepository.findById(id).orElse(null);
 	}
-
+	
+	public Profissional inserirHorarioAtendimento(String data, Double preco, String horaInicio, String horaFim) throws ParseException, ValidacaoException {
+		HorarioAtendimento ha = horarioAtendimentoService.construirHorarioAtendimento(data, preco, horaInicio, horaFim);	
+		horarioAtendimentoService.validarHorario(ha);
+		horarioAtendimentoService.verificarChoqueEntreHorarios(ha, buscarProfissionalPorUsuarioLogado().getHorarioAtendimento());
+		
+		return adicionarHorarioAtendimento(ha);
+	}
+	
 	public Profissional adicionarHorarioAtendimento(HorarioAtendimento ha) {
 		Profissional ps = buscarProfissionalPorUsuarioLogado();
 		ps.getHorarioAtendimento().add(ha);
 		return salvar(ps);
-	}
-
-	public List<HorarioAtendimento> buscarHorariosAtendimento() {
-		Profissional ps = buscarProfissionalPorUsuarioLogado();
-		return ps.getHorarioAtendimento();
 	}
 	
 	public List<HorarioAtendimento> buscarHorariosAtendimentoLivres(Long id){
@@ -159,8 +168,8 @@ public class ProfissionalService {
 		Profissional ps = buscarProfissionalPorUsuarioLogado();
 
 		ps.getHorarioAtendimento().removeIf(x -> x.getId().equals(idHorarioAtendimento));
-		horarioAtendimentoRepository.delete(horarioAtendimentoRepository.findById(idHorarioAtendimento).get());
-
+		horarioAtendimentoService.apagarHorarioAtendimento(idHorarioAtendimento);
+		
 		return salvar(ps);
 	}
 

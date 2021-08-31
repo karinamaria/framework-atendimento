@@ -72,7 +72,15 @@ public class AtendimentoService {
 
         return Date.from(dataMaisQuinzeDias.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
-
+    
+    public Atendimento construirAtendimento(Atendimento a, Long idHorario, Long idProfissional) {
+    	a.setCliente(clienteRepository.findClienteByUsuario(usuarioHelper.getUsuarioLogado()));
+        a.setProfissional(profissionalRepository.findById(idProfissional).get());
+        a.setHorarioAtendimento(horarioAtendimentoService.buscarHorarioPorId(idHorario));
+        
+        return a;
+    }
+    
     public void agendarAtendimento(Atendimento atendimento) throws ValidacaoException {
     	atendimento.setHorarioAtendimento(
                 horarioAtendimentoService.ocuparVaga(atendimento.getHorarioAtendimento())

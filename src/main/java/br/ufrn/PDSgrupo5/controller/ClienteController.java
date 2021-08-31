@@ -4,7 +4,6 @@ import br.ufrn.PDSgrupo5.framework.exception.ValidacaoException;
 import br.ufrn.PDSgrupo5.framework.model.Atendimento;
 import br.ufrn.PDSgrupo5.framework.model.Cliente;
 import br.ufrn.PDSgrupo5.framework.service.AtendimentoService;
-import br.ufrn.PDSgrupo5.framework.service.HorarioAtendimentoService;
 import br.ufrn.PDSgrupo5.framework.service.ClienteService;
 import br.ufrn.PDSgrupo5.framework.service.ProfissionalService;
 
@@ -23,15 +22,13 @@ public class ClienteController {
     private ClienteService clienteService;
     private ProfissionalService profissionalService;
     private AtendimentoService atendimentoService;
-    private HorarioAtendimentoService horarioAtendimentoService;
 
     @Autowired
     public ClienteController(ClienteService clienteService, ProfissionalService profissionalService,
-    						  AtendimentoService atendimentoService, HorarioAtendimentoService horarioAtendimentoService){
+    						  AtendimentoService atendimentoService){
         this.clienteService = clienteService;
         this.profissionalService = profissionalService;
         this.atendimentoService = atendimentoService;
-        this.horarioAtendimentoService = horarioAtendimentoService;
     }
 
     @GetMapping
@@ -99,12 +96,10 @@ public class ClienteController {
     public String agendarAtendimento(@RequestParam("horarioAtendimentoId") Long idHorario, @RequestParam("profissionalId") Long idProfissional,
                                      @Valid Atendimento atendimento, RedirectAttributes ra) {
     	try{
-            atendimento.setCliente(clienteService.buscarClientePorUsuarioLogado());
-            atendimento.setProfissional(profissionalService.buscarProfissionalPorId(idProfissional));
-            atendimento.setHorarioAtendimento(horarioAtendimentoService.buscarHorarioPorId(idHorario));
             
-            //atendimentoService.salvar(atendimento);
+    		atendimento = atendimentoService.construirAtendimento(atendimento, idHorario, idProfissional);
             atendimentoService.agendarAtendimento(atendimento);
+            
         }catch(ValidacaoException validacaoException){
             ra.addFlashAttribute("message", validacaoException.getMessage());
             ra.addFlashAttribute("atendimento",atendimento);

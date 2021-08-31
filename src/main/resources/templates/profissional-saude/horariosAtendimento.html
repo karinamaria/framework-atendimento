@@ -48,7 +48,7 @@
                                 <a th:if="!${horario.livre}" th:data-id="${horario.id}" data-toggle="modal" data-tt="Visualizar paciente" data-target="#" id="btnViewInfoPaciente" class="btn btn-action">
                                     <i class="fas fa-eye"></i>
                                 </a>
-								<a th:href="@{'/profissional-saude/excluirHorarioAtendimento?idHorarioAtendimento=' + ${horario.id}}" data-toggle="tooltip" data-placement="top" title="Excluir horário"  id="btnExcluirHorario" class="btn btn-action">
+								<a th:if="${horario.livre}" th:href="@{'/profissional-saude/excluirHorarioAtendimento?idHorarioAtendimento=' + ${horario.id}}" data-toggle="tooltip" data-placement="top" title="Excluir horário"  id="btnExcluirHorario" class="btn btn-action">
 									<i class="fa fa-trash"></i>
 								</a>
                             </td>
