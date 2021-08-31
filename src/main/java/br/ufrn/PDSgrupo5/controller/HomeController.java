@@ -104,16 +104,16 @@ public class HomeController {
     	Profissional p = profissionalSaude;
     	
     	try{
-            profissionalService.verificarPermissao(p);
-            profissionalService.validarDados(p, br);
-            profissionalService.salvarProfissional(p);
+            profissionalService.verificarPermissao(profissionalSaude);
+            profissionalService.validarDados(profissionalSaude, br);
+            profissionalService.salvarProfissional(profissionalSaude);
             ra.addFlashAttribute("active_tab",null);
         }catch(AcessoNegadoException ne){
             return "error/401.html";//usuário não tem permissão para edição
         }catch(ValidacaoException validacaoException){
             ra.addFlashAttribute("org.springframework.validation.BindingResult.profissional", validacaoException.getBindingResult());
             ra.addFlashAttribute("message", "Erro ao salvar profissional da saúde");
-            ra.addFlashAttribute("profissional", p);
+            ra.addFlashAttribute("profissional", profissionalSaude);
             ra.addFlashAttribute("active_tab", "profissional");
         }
 

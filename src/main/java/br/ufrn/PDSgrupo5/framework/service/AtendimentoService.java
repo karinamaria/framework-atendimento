@@ -1,13 +1,14 @@
 package br.ufrn.PDSgrupo5.framework.service;
 
 import br.ufrn.PDSgrupo5.framework.exception.ValidacaoException;
+import br.ufrn.PDSgrupo5.framework.handler.UsuarioHelper;
 import br.ufrn.PDSgrupo5.framework.model.Atendimento;
 import br.ufrn.PDSgrupo5.framework.model.HorarioAtendimento;
 import br.ufrn.PDSgrupo5.framework.model.Profissional;
 import br.ufrn.PDSgrupo5.framework.repository.AtendimentoRepository;
-
+import br.ufrn.PDSgrupo5.framework.repository.ClienteRepository;
+import br.ufrn.PDSgrupo5.framework.repository.ProfissionalRepository;
 import br.ufrn.PDSgrupo5.framework.strategy.NotificacaoStrategy;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,25 +20,29 @@ import java.util.stream.Collectors;
 
 @Service
 public class AtendimentoService {
-    private ClienteService clienteService;
 
-    private ProfissionalService profissionalService;
+    private final AtendimentoRepository atendimentoRepository;
 
-    private AtendimentoRepository atendimentoRepository;
-
-    private HorarioAtendimentoService horarioAtendimentoService;
+    private final HorarioAtendimentoService horarioAtendimentoService;
     
-    private NotificacaoStrategy notificacaoStrategy;
+    private final NotificacaoStrategy notificacaoStrategy;
+
+    private final UsuarioHelper usuarioHelper;
+
+    private final ClienteRepository clienteRepository;
+
+    private final ProfissionalRepository profissionalRepository;
     
     @Autowired
-    public AtendimentoService(ClienteService clienteService, ProfissionalService profissionalService,
-                              AtendimentoRepository atendimentoRepository, NotificacaoStrategy notificacaoStrategy,
-                              HorarioAtendimentoService horarioAtendimentoService){
-        this.clienteService = clienteService;
-        this.profissionalService = profissionalService;
+    public AtendimentoService(AtendimentoRepository atendimentoRepository, NotificacaoStrategy notificacaoStrategy,
+                              HorarioAtendimentoService horarioAtendimentoService, UsuarioHelper usuarioHelper,
+                              ClienteRepository clienteRepository, ProfissionalRepository profissionalRepository){
         this.atendimentoRepository = atendimentoRepository;
         this.notificacaoStrategy = notificacaoStrategy;
         this.horarioAtendimentoService = horarioAtendimentoService;
+        this.usuarioHelper = usuarioHelper;
+        this.clienteRepository = clienteRepository;
+        this.profissionalRepository = profissionalRepository;
     }
     
     public Atendimento salvar(Atendimento a) {
@@ -45,19 +50,19 @@ public class AtendimentoService {
     }
 
     public List<Atendimento> buscarProximosAtendimentosCliente(){
-        Long idClienteLogado = clienteService.buscarClientePorUsuarioLogado().getId();
+        Long idClienteLogado = clienteRepository.findClienteByUsuario(usuarioHelper.getUsuarioLogado()).getId();
 
         return atendimentoRepository.buscarProximosAtendimentosCliente(idClienteLogado, somarQuinzeDiasADataAtual());
     }
 
     public List<Atendimento> buscarProximosAtendimentosProfissional(){
-        Long idProfissionalLogado = profissionalService.buscarProfissionalPorUsuarioLogado().getId();
+        Long idProfissionalLogado = profissionalRepository.findByUsuario(usuarioHelper.getUsuarioLogado()).getId();
 
         return atendimentoRepository.buscarProximosAtendimentosProfissional(idProfissionalLogado, somarQuinzeDiasADataAtual());
     }
 
     public List<Atendimento> buscarAtendimentosAguardandoConfirmacao(){
-        Profissional profissional = profissionalService.buscarProfissionalPorUsuarioLogado();
+        Profissional profissional = profissionalRepository.findByUsuario(usuarioHelper.getUsuarioLogado());
 
         return atendimentoRepository.buscarAtendimentosAguardandoConfirmacao(profissional);
     }
