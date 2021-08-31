@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.InputMismatchException;
+import java.util.Objects;
 
 @Service
 public class PessoaService {
@@ -154,5 +155,19 @@ public class PessoaService {
             return ehCpfValido(cpfOuCnpj);
         }
         return ehCnpjValido(cpfOuCnpj);
+    }
+
+    /**
+     * Verifica se um login já está cadastrado no banco de dados
+     * @param pessoa que possuí um login que será verificado
+     * @return 'true' login existe, mas pertence a outro usuário. E 'false', caso contrário
+     */
+    public Boolean loginDaPessoaJaExiste(Pessoa pessoa){
+        Pessoa pessoaResult = pessoaRepository.findByLoginUsuario(pessoa.getUsuario().getLogin());
+
+        if(Objects.isNull(pessoaResult)){
+            return false;
+        }
+        return pessoa.getId() != pessoaResult.getId();
     }
 }

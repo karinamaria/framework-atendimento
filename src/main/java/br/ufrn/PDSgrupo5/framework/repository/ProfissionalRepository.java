@@ -13,4 +13,7 @@ public interface ProfissionalRepository extends JpaRepository<Profissional, Long
     Profissional findByUsuario(Usuario usuario);
 	
 	List<Profissional> findAllByLegalizado(boolean legalizado);
+
+	@Query(value="SELECT p FROM Profissional p WHERE p.pessoa.usuario.id=?1")
+	Profissional findByUsuarioId(Long idUsuario);
 }

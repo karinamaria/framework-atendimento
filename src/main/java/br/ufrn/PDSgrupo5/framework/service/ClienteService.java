@@ -9,6 +9,7 @@ import br.ufrn.PDSgrupo5.framework.model.Pessoa;
 import br.ufrn.PDSgrupo5.framework.model.Usuario;
 import br.ufrn.PDSgrupo5.framework.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
@@ -20,29 +21,30 @@ public class ClienteService {
 
     private PessoaService pessoaService;
 
-    private UsuarioService usuarioService;
-
     private UsuarioHelper usuarioHelper;
 
     @Autowired
     public ClienteService(ClienteRepository clienteRepository, PessoaService pessoaService,
-                           UsuarioService usuarioService, UsuarioHelper usuarioHelper){
+                           UsuarioHelper usuarioHelper){
         this.clienteRepository = clienteRepository;
         this.pessoaService = pessoaService;
-        this.usuarioService = usuarioService;
         this.usuarioHelper = usuarioHelper;
     }
 
-    public Cliente salvar(Cliente cliente){
+
+    public Cliente salvarCliente(Cliente cliente){
+        if(cliente.getId() == null){
+            cliente.setAtivo(true);
+            cliente.getPessoa().setUsuario(prepararUsuarioCliente(cliente.getPessoa().getUsuario()));
+        }
         return clienteRepository.save(cliente);
     }
 
-    public void salvarCliente(Cliente cliente){
-        if(cliente.getId() == null){
-            cliente.setAtivo(true);
-            cliente.getPessoa().setUsuario(usuarioService.prepararUsuarioParaCriacao(cliente.getPessoa().getUsuario()));
-        }
-        salvar(cliente);
+    public Usuario prepararUsuarioCliente(Usuario usuario){
+        usuario.setEnumTipoPapel(EnumTipoPapel.CLIENTE);
+        usuario.setSenha(new BCryptPasswordEncoder().encode(usuario.getSenha()));
+
+        return usuario;
     }
 
     /**
@@ -64,7 +66,7 @@ public class ClienteService {
         if(!cliente.getPessoa().getEmail().matches("^(.+)@(.+)$")){
             br.rejectValue("pessoa.email", "","E-mail inválido");
         }
-        if(usuarioService.loginJaExiste(cliente.getPessoa().getUsuario())){
+        if(pessoaService.loginDaPessoaJaExiste(cliente.getPessoa())){
             br.rejectValue("pessoa.usuario.login", "","Login já existe");
         }
         if(cliente.getPessoa().getUsuario().getLogin().length() < 5){
@@ -88,11 +90,6 @@ public class ClienteService {
 
     public void excluirCliente(Cliente cliente){
         clienteRepository.delete(cliente);
-    }
-
-    public Cliente buscarClientePorUsuario(Long id){
-        Usuario usuario = usuarioService.buscarUsuarioPeloId(id);
-        return clienteRepository.findClienteByUsuario(usuario);
     }
 
     /**

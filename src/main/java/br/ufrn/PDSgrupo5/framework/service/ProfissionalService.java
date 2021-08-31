@@ -1,9 +1,5 @@
 package br.ufrn.PDSgrupo5.framework.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 import br.ufrn.PDSgrupo5.framework.enumeration.EnumSituacaoProfissionalSaude;
 import br.ufrn.PDSgrupo5.framework.enumeration.EnumTipoPapel;
 import br.ufrn.PDSgrupo5.framework.exception.AcessoNegadoException;
@@ -15,18 +11,20 @@ import br.ufrn.PDSgrupo5.framework.model.Profissional;
 import br.ufrn.PDSgrupo5.framework.model.Usuario;
 import br.ufrn.PDSgrupo5.framework.repository.HorarioAtendimentoRepository;
 import br.ufrn.PDSgrupo5.framework.repository.ProfissionalRepository;
-
 import br.ufrn.PDSgrupo5.framework.strategy.ValidarProfissionalStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ProfissionalService {
 	private final ProfissionalRepository profissionalRepository;
-	
-	private final UsuarioService usuarioService;
-	
+
 	private final UsuarioHelper usuarioHelper;
 
 	private final HorarioAtendimentoRepository horarioAtendimentoRepository;
@@ -37,12 +35,11 @@ public class ProfissionalService {
 	
 	@Autowired
 	public ProfissionalService(ProfissionalRepository profissionalRepository,
-									UsuarioService usuarioService, UsuarioHelper usuarioHelper,
+									UsuarioHelper usuarioHelper,
 									HorarioAtendimentoRepository hr,
 									ValidarProfissionalStrategy validarProfissionalStrategy,
 							   		PessoaService pessoaService) {
 		this.profissionalRepository = profissionalRepository;
-		this.usuarioService = usuarioService;
 		this.usuarioHelper = usuarioHelper;
 		this.horarioAtendimentoRepository = hr;
 		this.validarProfissionalStrategy = validarProfissionalStrategy;
@@ -56,8 +53,7 @@ public class ProfissionalService {
 	public void salvarProfissional(Profissional ps) {
 		if(ps.getId() == null) {
 			ps.setAtivo(true);
-			ps.getPessoa().setUsuario(usuarioService.prepararUsuarioParaCriacao(ps.getPessoa().getUsuario()));
-			ps.getPessoa().getUsuario().setEnumTipoPapel(EnumTipoPapel.PROFISSIONAL);
+			ps.getPessoa().setUsuario(prepararUsuarioProfissional(ps.getPessoa().getUsuario()));
 			ps.setSituacaoProfissionalSaude(EnumSituacaoProfissionalSaude.AGUARDANDO_ANALISE);
 		} else {
 			Profissional psAux = buscarProfissionalPorUsuarioLogado();
@@ -67,6 +63,13 @@ public class ProfissionalService {
 
 		salvar(ps);
 	}
+
+	public Usuario prepararUsuarioProfissional(Usuario usuario){
+		usuario.setEnumTipoPapel(EnumTipoPapel.PROFISSIONAL);
+		usuario.setSenha(new BCryptPasswordEncoder().encode(usuario.getSenha()));
+
+		return usuario;
+	}
 	
 	public void validarDados(Profissional profissional, BindingResult br) throws ValidacaoException {
 		br = validarProfissionalStrategy.validarProfissional(profissional, br);
@@ -75,7 +78,7 @@ public class ProfissionalService {
             br.rejectValue("pessoa.email", "","E-mail inválido");
         }
 		
-        if(usuarioService.loginJaExiste(profissional.getPessoa().getUsuario())){
+        if(pessoaService.loginDaPessoaJaExiste(profissional.getPessoa())){
             br.rejectValue("pessoa.usuario.login", "","Login já existe");
         }
         
@@ -107,10 +110,6 @@ public class ProfissionalService {
 
         return ps;
 	}
-
-	public List<Profissional> listarTodosProfissionais(){
-		return profissionalRepository.findAll();
-	}
 	
 	public void excluir(Profissional ps) {
 		profissionalRepository.delete(ps);
@@ -121,8 +120,7 @@ public class ProfissionalService {
 	}
 	
 	public Profissional buscarProfissionalPorUsuario(Long id){
-        Usuario usuario = usuarioService.buscarUsuarioPeloId(id);
-        return profissionalRepository.findByUsuario(usuario);
+        return profissionalRepository.findByUsuarioId(id);
     }
 
     public List<Profissional> listarProfissionaisStatusLegalizacao(boolean legalizado){
