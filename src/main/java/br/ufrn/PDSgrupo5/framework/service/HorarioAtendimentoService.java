@@ -1,6 +1,7 @@
 package br.ufrn.PDSgrupo5.framework.service;
 
 import br.ufrn.PDSgrupo5.framework.exception.ValidacaoException;
+import br.ufrn.PDSgrupo5.framework.model.Atendimento;
 import br.ufrn.PDSgrupo5.framework.model.HorarioAtendimento;
 import br.ufrn.PDSgrupo5.framework.repository.HorarioAtendimentoRepository;
 import br.ufrn.PDSgrupo5.framework.strategy.VagasHorarioAtendimentoStrategy;
@@ -90,21 +91,21 @@ public class HorarioAtendimentoService {
 	/**
 	 * O método 'ocuparVaga' é responsável por fechar o recebimento de atendimentos
 	 * para determinado horário de atendimento
-	 * @param horarioAtendimento que deseja agendar o atendimento
+	 * @param atendimento que com o horário de atendimento no qual deseja agendar
 	 * @return o horário de atendimento
 	 * @throws ValidacaoException exceção lançada quando usuário tenta agendar atendimento
 	 * em um horário que não está livre
 	 */
-	public HorarioAtendimento ocuparVaga(HorarioAtendimento horarioAtendimento) throws ValidacaoException {
-		int quantidadeVagas = validarHorarioAtendimentoStrategy.calcularVagasHorarioAtendimento(horarioAtendimento);
+	public HorarioAtendimento ocuparVaga(Atendimento atendimento) throws ValidacaoException {
+		int quantidadeVagas = validarHorarioAtendimentoStrategy.calcularVagasHorarioAtendimento(atendimento);
 			
 		if(quantidadeVagas == 0){
 			throw new ValidacaoException("Não há mais vagas para esse horário de atendimento. Por favor, escolha outro.");
 		}
 		if(quantidadeVagas == 1){
-			horarioAtendimento.setLivre(false);
+			atendimento.getHorarioAtendimento().setLivre(false);
 		}
-		return horarioAtendimento;
+		return atendimento.getHorarioAtendimento();
 	}
 	
 	private Date converterParaDate(String data, String hora) throws ParseException {

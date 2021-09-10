@@ -1,6 +1,6 @@
 package br.ufrn.PDSgrupo5.extensions.service;
 
-import br.ufrn.PDSgrupo5.framework.model.HorarioAtendimento;
+import br.ufrn.PDSgrupo5.framework.model.Atendimento;
 import br.ufrn.PDSgrupo5.framework.repository.HorarioAtendimentoRepository;
 import br.ufrn.PDSgrupo5.framework.strategy.VagasHorarioAtendimentoStrategy;
 
@@ -15,10 +15,10 @@ public class ValidarHorarioAtendimentoStrategyProfissionalSaude implements Vagas
     }
 
     @Override
-    public int calcularVagasHorarioAtendimento(HorarioAtendimento horarioAtendimento) {
+    public int calcularVagasHorarioAtendimento(Atendimento atendimento) {
         int quantidadeVagas = 0;
         
-        if(horarioAtendimentoRepository.getById(horarioAtendimento.getId()).isLivre()){
+        if(horarioAtendimentoRepository.getById(atendimento.getHorarioAtendimento().getId()).isLivre()){
             quantidadeVagas=1;
         }
         return quantidadeVagas;
