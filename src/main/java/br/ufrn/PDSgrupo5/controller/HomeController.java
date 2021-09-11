@@ -1,6 +1,6 @@
 package br.ufrn.PDSgrupo5.controller;
 
-import br.ufrn.PDSgrupo5.extensions.model.ProfissionalSaude;
+import br.ufrn.PDSgrupo5.extensions.model.Salao;
 import br.ufrn.PDSgrupo5.framework.enumeration.EnumTipoPapel;
 import br.ufrn.PDSgrupo5.framework.exception.AcessoNegadoException;
 import br.ufrn.PDSgrupo5.framework.exception.ValidacaoException;
@@ -10,7 +10,6 @@ import br.ufrn.PDSgrupo5.framework.model.Profissional;
 import br.ufrn.PDSgrupo5.framework.service.AtendimentoService;
 import br.ufrn.PDSgrupo5.framework.service.ClienteService;
 import br.ufrn.PDSgrupo5.framework.service.ProfissionalService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -63,7 +62,7 @@ public class HomeController {
             model.addAttribute("cliente",new Cliente());
         }
         if(!model.containsAttribute("profissional")){
-        	Profissional p = new ProfissionalSaude(); 
+        	Profissional p = new Salao();
             model.addAttribute("profissional", p);
         }
 
@@ -99,19 +98,19 @@ public class HomeController {
     }
 
     @PostMapping("/novo-profissional/salvar")
-    public String novoProfissionalSaude(@Valid ProfissionalSaude profissionalSaude, BindingResult br, RedirectAttributes ra){
+    public String novoProfissionalSaude(@Valid Salao salao, BindingResult br, RedirectAttributes ra){
         
-//    	Profissional p = profissionalSaude;
+//    	Profissional p = salao;
     	
     	try{
-            profissionalService.inserirProfissional(profissionalSaude, br);
+            profissionalService.inserirProfissional(salao, br);
             ra.addFlashAttribute("active_tab",null);
         }catch(AcessoNegadoException ne){
             return "error/401.html";//usuário não tem permissão para edição
         }catch(ValidacaoException validacaoException){
             ra.addFlashAttribute("org.springframework.validation.BindingResult.profissional", validacaoException.getBindingResult());
             ra.addFlashAttribute("message", "Erro ao salvar profissional da saúde");
-            ra.addFlashAttribute("profissional", profissionalSaude);
+            ra.addFlashAttribute("profissional", salao);
             ra.addFlashAttribute("active_tab", "profissional");
         }
 

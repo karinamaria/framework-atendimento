@@ -316,28 +316,21 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-4">
-                                <label for="tipoRegistroProfissionalInput">Tipo do Registro Profissional</label>
-                                <select class="form-control" th:field="*{enumTipoRegistro}" id="tipoRegistroProfissionalInput" required>
-                                    <option th:each="tipoRegistro : ${T(br.ufrn.PDSgrupo5.extensions.model.EnumTipoRegistro).values()}"
-                                            th:value="${tipoRegistro}" th:text="${tipoRegistro.descricao}"></option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="numeroRegistroProfissionalInput">Número do Registro Profissional</label> <input
-                                    class="form-control" id="numeroRegistroProfissionalInput" type="text"
-                                    th:field="*{numeroRegistro}" required="required" />
+                                <label for="qntTotalFuncionariosInput">Quantidade total de funcionários:</label> <input
+                                    class="form-control" id="qntTotalFuncionariosInput" type="number"
+                                    th:field="*{qntTotalFuncionarios}" required="required" />
                                 <div style="color: red;">
-                                    <div th:if="${#fields.hasErrors('numeroRegistro')}"
-                                         th:errors="*{numeroRegistro}">errors</div>
+                                    <div th:if="${#fields.hasErrors('qntTotalFuncionarios')}"
+                                         th:errors="*{qntTotalFuncionarios}">errors</div>
                                 </div>
                             </div>
-                            <div class="form-group col-md-4">
-                                <label for="DataAprovacaoRegistroInput">Data de Aprovação do Registro Profissional</label> <input
-                                    class="form-control" id="DataAprovacaoRegistroInput" type="date"
-                                    th:field="*{dataAprovacaoRegistro}" required="required" />
+                            <div class="form-group col-md-6">
+                                <label for="qntFuncionariosAtendemDomicilioInput">Quantidade funcionários atendem em domícilio:</label> <input
+                                    class="form-control" id="qntFuncionariosAtendemDomicilioInput" type="number"
+                                    th:field="*{qntFuncionariosAtendemDomicilio}" required="required" />
                                 <div style="color: red;">
-                                    <div th:if="${#fields.hasErrors('dataAprovacaoRegistro')}"
-                                         th:errors="*{dataAprovacaoRegistro}">errors</div>
+                                    <div th:if="${#fields.hasErrors('qntFuncionariosAtendemDomicilio')}"
+                                         th:errors="*{qntFuncionariosAtendemDomicilio}">errors</div>
                                 </div>
                             </div>
                         </div>

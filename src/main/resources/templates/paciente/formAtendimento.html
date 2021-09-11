@@ -10,7 +10,7 @@
 <body>
 	<th:block layout:fragment="content">	
         <div class="ml-md-5 mr-md-5 mb-5">
-        	<h3 class="text-secondary mt-4 mb-4 text-center"><span th:text="${profissional.pessoa.nome}"></span>, <span th:text="${profissional.enumTipoRegistro.getDescricao()}"></span></h3>
+        	<h3 class="text-secondary mt-4 mb-4 text-center"><span th:text="${profissional.pessoa.nome}"></span></h3>
         	<p class="card-text"><span th:utext="${profissional.descricao}"></span></p>
             <div class="card mb-4">
                 <div class="card-header">
@@ -81,8 +81,7 @@
 		                <select th:field="*{tipoAtendimento}" class="form-control mx-auto" id="tipoAtendimentoInput" required>
 		                  <option value="" selected>Selecione</option>
 		                  <option value="em domicilio">em domicilio</option>
-		                  <option value="consultório">consultório</option>
-		                  <option value="telefone">telefone</option>
+		                  <option value="no salão">no salão</option>
 		                </select>
 		              </div>
 		            </div>

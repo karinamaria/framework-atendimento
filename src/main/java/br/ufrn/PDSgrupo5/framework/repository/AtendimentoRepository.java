@@ -1,5 +1,6 @@
 package br.ufrn.PDSgrupo5.framework.repository;
 
+import br.ufrn.PDSgrupo5.framework.model.HorarioAtendimento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -28,4 +29,6 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, Long> 
 
     @Query(value="select a from Atendimento a where a.confirmado=true and a.cliente.id=?1 and a.horarioAtendimento.horarioInicio > (CURRENT_DATE - ?2)")
     List<Atendimento> buscarTodosProximosAtendimentosCliente(Long idCliente, int diasParaNotificacao);
+
+    List<Atendimento> findByHorarioAtendimento(HorarioAtendimento horarioAtendimento);
 }

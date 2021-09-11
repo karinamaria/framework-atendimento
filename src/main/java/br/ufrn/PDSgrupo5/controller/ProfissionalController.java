@@ -1,23 +1,21 @@
 package br.ufrn.PDSgrupo5.controller;
 
-import br.ufrn.PDSgrupo5.extensions.model.ProfissionalSaude;
+import br.ufrn.PDSgrupo5.extensions.model.Salao;
 import br.ufrn.PDSgrupo5.framework.exception.ValidacaoException;
 import br.ufrn.PDSgrupo5.framework.model.Profissional;
 import br.ufrn.PDSgrupo5.framework.service.AtendimentoService;
 import br.ufrn.PDSgrupo5.framework.service.ProfissionalService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.text.ParseException;
 
 @Controller
-@RequestMapping("profissional-saude")
+@RequestMapping("profissional")
 public class ProfissionalController {
 	private ProfissionalService profissionalService;
 	private AtendimentoService atendimentoService;
@@ -32,16 +30,16 @@ public class ProfissionalController {
 	@GetMapping("/form")
 	public String form(Model model) {
 		if(!model.containsAttribute("profissional")) {
-			model.addAttribute("profissional", new ProfissionalSaude());
+			model.addAttribute("profissional", new Salao());
 		}
 		
-		return "profissional-saude/form";
+		return "profissional/form";
 	}
 	
     @PostMapping("/salvar")
-    public String salvar(@Valid ProfissionalSaude profissionalSaude, BindingResult br, RedirectAttributes ra, Model model) {
+    public String salvar(@Valid Salao salao, BindingResult br, Model model) {
         
-    	Profissional p = profissionalSaude;
+    	Profissional p = salao;
     	
     	try{
             p = profissionalService.verificarEdicao(p);
@@ -60,7 +58,7 @@ public class ProfissionalController {
     @GetMapping("/editar")
     public String editar(Model model) {
         model.addAttribute("profissional", profissionalService.buscarProfissionalPorUsuarioLogado());
-        return "profissional-saude/form";
+        return "profissional/form";
     }
 
     //usuário com papel "validador" pode editar qualquer profissional da saúde
@@ -94,7 +92,7 @@ public class ProfissionalController {
     public String horariosAtendimento(Model model) {
     	Profissional ps = profissionalService.buscarProfissionalPorUsuarioLogado();
     	model.addAttribute("horariosAtendimento", ps.getHorarioAtendimento());
-    	return "profissional-saude/horariosAtendimento";
+    	return "profissional/horariosAtendimento";
     }
     
     @PostMapping("/addHorarioAtendimento")
@@ -107,20 +105,20 @@ public class ProfissionalController {
 			profissionalService.inserirHorarioAtendimento(data, preco, horaInicio, horaFim);
 			
 		} catch (ParseException e) {
-			return "redirect:/profissional-saude/error";
+			return "redirect:/profissional/error";
 		} catch (ValidacaoException validacaoException){
             model.addAttribute("mensagemErro", validacaoException.getMessage());
             return horariosAtendimento(model);
         }
     	
-    	return "redirect:/profissional-saude/horariosAtendimento";
+    	return "redirect:/profissional/horariosAtendimento";
     }
 
     @GetMapping("/excluirHorarioAtendimento")
     public String excluirHorarioAtendimento(@RequestParam("idHorarioAtendimento") Long idHorarioAtendimento){
         profissionalService.excluirHorarioAtendimento(idHorarioAtendimento);
 
-        return "redirect:/profissional-saude/horariosAtendimento";
+        return "redirect:/profissional/horariosAtendimento";
     }
 
     @PostMapping("/aceitarRecusarAtendimento")

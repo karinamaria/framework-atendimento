@@ -83,7 +83,7 @@ public class AtendimentoService {
     
     public void agendarAtendimento(Atendimento atendimento) throws ValidacaoException {
     	atendimento.setHorarioAtendimento(
-                horarioAtendimentoService.ocuparVaga(atendimento.getHorarioAtendimento())
+                horarioAtendimentoService.ocuparVaga(atendimento)
         );
         salvar(atendimento);
     }

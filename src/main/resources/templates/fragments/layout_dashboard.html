@@ -18,8 +18,6 @@
             <tr>
               <th>Nome</th>
               <th>CPF</th>
-              <th>Profissão</th>
-              <th>Nº Registro</th>
               <th>Situação </th>
               <th>Opção</th>
             </tr>
@@ -29,8 +27,6 @@
               <td th:text="${profissional.pessoa.nome}">
               </td>
               <td th:text="${profissional.pessoa.cpfOuCnpj}"></td>
-              <td th:text="${profissional.enumTipoRegistro.descricao}"></td>
-              <td th:text="${profissional.numeroRegistro}"></td>
               <td th:text="${profissional.situacaoProfissionalSaude.descricao}"></td>
 
               <td class="actions-col">
@@ -104,7 +100,7 @@
         <div class="card-body">
           <h5 class="card-title"><span th:text="'Atendimento '+${atendimento.tipoAtendimento}"></span></h5>
           <h6 class="card-subtitle mb-2 text-muted">
-            <span th:text="'Profissional: '+${#strings.abbreviate(atendimento.profissional.pessoa.nome, 50)}+ ' - ' +${#strings.abbreviate(atendimento.profissional.enumTipoRegistro.descricao, 50)}"></span>
+            <span th:text="'Profissional: '+${#strings.abbreviate(atendimento.profissional.pessoa.nome, 50)}"></span>
           </h6>
           <span class="card-text">
             <p th:text="'Horário: '+${#dates.format(atendimento.horarioAtendimento.horarioInicio, 'dd/MM/yyyy HH:mm')} + '-' +${#dates.format(atendimento.horarioAtendimento.horarioFim, 'HH:mm')}"></p>
@@ -131,17 +127,12 @@
           <thead>
           <tr>
             <th>Nome</th>
-            <th>Profissão</th>
-            <th>Nº Registro</th>
             <th>Opção</th>
           </tr>
           </thead>
           <tbody>
           <tr th:each="profissional : ${profissionais}">
             <td th:text="${profissional.pessoa.nome}"></td>
-            <td th:text="${profissional.enumTipoRegistro.descricao}"></td>
-            <td th:text="${profissional.numeroRegistro}"></td>
-
             <td class="actions-col">
               <a th:href="${(#mvc.url('CC#visualizarProfissional').arg(0, profissional.id)).build()}" id="btnVisualizarProfissional" class="btn btn-action">
                 <i class="fa fa-eye"></i>
@@ -212,7 +203,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form class="container-fluid ml-md-5 mr-md-5 mb-5" method="POST"  th:action="@{/profissional-saude/aceitarRecusarAtendimento}">
+          <form class="container-fluid ml-md-5 mr-md-5 mb-5" method="POST"  th:action="@{/profissional/aceitarRecusarAtendimento}">
             <div class="form-row">
               <input type="hidden" name="atendimentoId" value=""/>
               <div class="form-group col-md-8">
