@@ -1,6 +1,6 @@
 package br.ufrn.PDSgrupo5.controller;
 
-import br.ufrn.PDSgrupo5.extensions.model.ProfissionalSaude;
+import br.ufrn.PDSgrupo5.extensions.model.Restaurante;
 import br.ufrn.PDSgrupo5.framework.exception.ValidacaoException;
 import br.ufrn.PDSgrupo5.framework.model.Profissional;
 import br.ufrn.PDSgrupo5.framework.service.AtendimentoService;
@@ -32,14 +32,14 @@ public class ProfissionalController {
 	@GetMapping("/form")
 	public String form(Model model) {
 		if(!model.containsAttribute("profissional")) {
-			model.addAttribute("profissional", new ProfissionalSaude());
+			model.addAttribute("profissional", new Restaurante());
 		}
 		
 		return "profissional-saude/form";
 	}
 	
     @PostMapping("/salvar")
-    public String salvar(@Valid ProfissionalSaude profissionalSaude, BindingResult br, RedirectAttributes ra, Model model) {
+    public String salvar(@Valid Restaurante profissionalSaude, BindingResult br, RedirectAttributes ra, Model model) {
         
     	Profissional p = profissionalSaude;
     	

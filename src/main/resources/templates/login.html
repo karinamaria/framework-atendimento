@@ -100,9 +100,9 @@
 
                 <nav class="nav nav-status justify-content-center pb-4">
                     <a id="showPacienteForm" class="nav-link form-tab"
-                       th:classappend="${active_tab} == null or ${active_tab} == 'cliente' ? 'active'" href="#">PACIENTE</a>
+                       th:classappend="${active_tab} == null or ${active_tab} == 'cliente' ? 'active'" href="#">CLIENTE</a>
                     <a id="showProfissionalForm" class="nav-link form-tab"
-                       th:classappend="${active_tab} != null and ${active_tab} == 'profissional' ? 'active'" href="#">PROFISSIONAL</a>
+                       th:classappend="${active_tab} != null and ${active_tab} == 'profissional' ? 'active'" href="#">RESTAURANTE</a>
                 </nav>
 
                 <div class="pacienteForm"
@@ -123,7 +123,7 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-4">
-                                <label for="nomePacienteInput">Nome do Paciente</label> <input
+                                <label for="nomePacienteInput">Nome do Cliente</label> <input
                                     class="form-control" id="nomePacienteInput" type="text"
                                     th:field="*{pessoa.nome}" required="required"/>
                                 <div style="color: red;">
@@ -256,12 +256,12 @@
                         </div>
 
                         <div class="form-row border-bottom my-5">
-                            <h5 class="mb-0">Dados pessoais</h5>
+                            <h5 class="mb-0">Dados profissionais</h5>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group col-md-4">
-                                <label for="nomeProfissionalSaudeInput">Nome do Profissional</label> <input
+                                <label for="nomeProfissionalSaudeInput">Nome do Restaurante</label> <input
                                     class="form-control" id="nomeProfissionalSaudeInput" type="text"
                                     th:field="*{pessoa.nome}" required="required" />
                                 <div style="color: red;">
@@ -269,9 +269,9 @@
                                 </div>
                             </div>
                             <div class="form-group col-md-4">
-                                <label for="cpfInput">CPF</label> <input class="form-control"
+                                <label for="cpfInput">CNPJ</label> <input class="form-control"
                                                                          id="cpfInput" type="text" th:field="*{pessoa.cpfOuCnpj}"
-                                                                         data-mask="000.000.000-00" data-mask-reverse="true"
+                                                                         data-mask="00.000.000/0000-00" data-mask-reverse="true"
                                                                          required="required" />
                                 <div style="color: red;">
                                     <div th:if="${#fields.hasErrors('pessoa.cpfOuCnpj')}"
@@ -311,33 +311,26 @@
                         </div>
 
                         <div class="form-row border-bottom my-5">
-                            <h5 class="mb-0">Dados profissionais</h5>
+                            <h5 class="mb-0">Especificações do estabelecimento</h5>
                         </div>
 
                         <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label for="tipoRegistroProfissionalInput">Tipo do Registro Profissional</label>
-                                <select class="form-control" th:field="*{enumTipoRegistro}" id="tipoRegistroProfissionalInput" required>
-                                    <option th:each="tipoRegistro : ${T(br.ufrn.PDSgrupo5.extensions.model.EnumTipoRegistro).values()}"
-                                            th:value="${tipoRegistro}" th:text="${tipoRegistro.descricao}"></option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="numeroRegistroProfissionalInput">Número do Registro Profissional</label> <input
-                                    class="form-control" id="numeroRegistroProfissionalInput" type="text"
-                                    th:field="*{numeroRegistro}" required="required" />
+                            <div class="form-group col-md-6">
+                                <label for="quantidadeMesasProfissionalInput">Quantidade de mesas</label>
+                                <input class="form-control" id="quantidadeMesasProfissionalInput"
+                                		type="number" th:field="*{quantidadeMesas}" required="required" />
                                 <div style="color: red;">
-                                    <div th:if="${#fields.hasErrors('numeroRegistro')}"
-                                         th:errors="*{numeroRegistro}">errors</div>
+                                    <div th:if="${#fields.hasErrors('quantidadeMesas')}"
+                                         th:errors="*{quantidadeMesas}">errors</div>
                                 </div>
                             </div>
-                            <div class="form-group col-md-4">
-                                <label for="DataAprovacaoRegistroInput">Data de Aprovação do Registro Profissional</label> <input
-                                    class="form-control" id="DataAprovacaoRegistroInput" type="date"
-                                    th:field="*{dataAprovacaoRegistro}" required="required" />
+                            <div class="form-group col-md-6">
+                                <label for="cadeirasPorMesaProfissionalInput">Quantidade de cadeiras por mesa</label>
+                                <input class="form-control" id="cadeirasPorMesaProfissionalInput"
+                                		type="number" th:field="*{cadeirasPorMesa}" required="required" />
                                 <div style="color: red;">
-                                    <div th:if="${#fields.hasErrors('dataAprovacaoRegistro')}"
-                                         th:errors="*{dataAprovacaoRegistro}">errors</div>
+                                    <div th:if="${#fields.hasErrors('cadeirasPorMesa')}"
+                                         th:errors="*{cadeirasPorMesa}">errors</div>
                                 </div>
                             </div>
                         </div>

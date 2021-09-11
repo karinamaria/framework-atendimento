@@ -5,32 +5,27 @@
 <body>
 
 <th:block th:fragment="validadorDashboard">
-    <h2 class="text-secondary mt-4 mb-4 text-center">Profissionais não validados</h2>
+    <h2 class="text-secondary mt-4 mb-4 text-center">Restaurantes não validados</h2>
     <div class="ml-md-5 mr-md-5 mb-5">
       <div class="card mb-4">
         <div class="card-header">
           <i class="fas fa-table me-1"></i>
-          Lista de profissionais agurdando validação
+          Lista de restaurantes aguardando validação
         </div>
         <div class="card-body">
           <table id="datatablesSimple">
             <thead>
             <tr>
-              <th>Nome</th>
-              <th>CPF</th>
-              <th>Profissão</th>
-              <th>Nº Registro</th>
+              <th>Nome do estabelecimento</th>
+              <th>CNPJ</th>
               <th>Situação </th>
               <th>Opção</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="profissional : ${profissionais}">
-              <td th:text="${profissional.pessoa.nome}">
-              </td>
+              <td th:text="${profissional.pessoa.nome}"></td>
               <td th:text="${profissional.pessoa.cpfOuCnpj}"></td>
-              <td th:text="${profissional.enumTipoRegistro.descricao}"></td>
-              <td th:text="${profissional.numeroRegistro}"></td>
               <td th:text="${profissional.situacaoProfissionalSaude.descricao}"></td>
 
               <td class="actions-col">
@@ -50,7 +45,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">VALIDAR/INVALIDAR PROFISSIONAL</h5>
+          <h5 class="modal-title" id="exampleModalLabel">VALIDAR/INVALIDAR RESTAURANTE</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -102,14 +97,14 @@
     <div class="container-fluid" th:unless="${#lists.isEmpty(proximosAtendimentos)}"  th:each="atendimento : ${proximosAtendimentos}">
       <div class="card mt-2">
         <div class="card-body">
-          <h5 class="card-title"><span th:text="'Atendimento '+${atendimento.tipoAtendimento}"></span></h5>
+          <h5 class="card-title"><span th:text="'Atendimento para '+${atendimento.tipoAtendimento}"></span></h5>
           <h6 class="card-subtitle mb-2 text-muted">
-            <span th:text="'Profissional: '+${#strings.abbreviate(atendimento.profissional.pessoa.nome, 50)}+ ' - ' +${#strings.abbreviate(atendimento.profissional.enumTipoRegistro.descricao, 50)}"></span>
+            <span th:text="'Restaurante: '+${#strings.abbreviate(atendimento.profissional.pessoa.nome, 50)}"></span>
           </h6>
           <span class="card-text">
             <p th:text="'Horário: '+${#dates.format(atendimento.horarioAtendimento.horarioInicio, 'dd/MM/yyyy HH:mm')} + '-' +${#dates.format(atendimento.horarioAtendimento.horarioFim, 'HH:mm')}"></p>
-            <p th:text="'Preço: '+${atendimento.horarioAtendimento.precoToString()}"></p>
-            <p th:if="!${atendimento.confirmado}">Aguardando confirmação do profissional</p>
+            <p th:text="'Taxa de reserva: '+${atendimento.horarioAtendimento.precoToString()}"></p>
+            <p th:if="!${atendimento.confirmado}">Aguardando confirmação do restaurante</p>
           </span>
         </div>
       </div>
@@ -124,23 +119,19 @@
     <div class="card mb-4">
       <div class="card-header">
         <i class="fas fa-table me-1"></i>
-        Profissionais disponiveis para agendamento
+        Restaurantes disponíveis para agendamento
       </div>
       <div class="card-body">
         <table id="datatablesSimple">
           <thead>
           <tr>
             <th>Nome</th>
-            <th>Profissão</th>
-            <th>Nº Registro</th>
             <th>Opção</th>
           </tr>
           </thead>
           <tbody>
           <tr th:each="profissional : ${profissionais}">
             <td th:text="${profissional.pessoa.nome}"></td>
-            <td th:text="${profissional.enumTipoRegistro.descricao}"></td>
-            <td th:text="${profissional.numeroRegistro}"></td>
 
             <td class="actions-col">
               <a th:href="${(#mvc.url('CC#visualizarProfissional').arg(0, profissional.id)).build()}" id="btnVisualizarProfissional" class="btn btn-action">
@@ -167,13 +158,13 @@
     <div class="container-fluid" th:unless="${#lists.isEmpty(atendimentosStatusPendente)}" th:each="atendimento : ${atendimentosStatusPendente}">
       <div class="card mt-2">
         <div class="card-body">
-          <h5 class="card-title"><span th:text="'Atendimento '+${atendimento.tipoAtendimento}"></span></h5>
+          <h5 class="card-title"><span th:text="'Atendimento para '+${atendimento.tipoAtendimento}"></span></h5>
           <h6 class="card-subtitle mb-2 text-muted">
-            <span th:text="'Paciente: '+${#strings.abbreviate(atendimento.cliente.pessoa.nome, 50)}+ ' - ' +${#strings.abbreviate(atendimento.cliente.pessoa.email, 50)}"></span>
+            <span th:text="'Cliente: '+${#strings.abbreviate(atendimento.cliente.pessoa.nome, 50)}+ ' - ' +${#strings.abbreviate(atendimento.cliente.pessoa.email, 50)}"></span>
           </h6>
           <span class="card-text">
             <p th:text="'Horário: '+${#dates.format(atendimento.horarioAtendimento.horarioInicio, 'dd/MM/yyyy HH:mm')} + '-' +${#dates.format(atendimento.horarioAtendimento.horarioFim, 'HH:mm')}"></p>
-            <p th:text="'Preço: '+${atendimento.horarioAtendimento.precoToString()}"></p>
+            <p th:text="'Taxa de reserva: '+${atendimento.horarioAtendimento.precoToString()}"></p>
             <a th:data-id="${atendimento.id}" data-toggle="modal" data-target="#modalStatusAtendimento" class="btn btn-primary">Alterar estado do atendimento</a>
           </span>
         </div>
@@ -188,13 +179,13 @@
     <div class="container-fluid" th:unless="${#lists.isEmpty(proximosAtendimentos)}" th:each="atendimento : ${proximosAtendimentos}">
       <div class="card mt-2">
         <div class="card-body">
-          <h5 class="card-title"><span th:text="'Atendimento '+${atendimento.tipoAtendimento}"></span></h5>
+          <h5 class="card-title"><span th:text="'Atendimento para '+${atendimento.tipoAtendimento}"></span></h5>
           <h6 class="card-subtitle mb-2 text-muted">
-            <span th:text="'Paciente: '+${#strings.abbreviate(atendimento.cliente.pessoa.nome, 50)}+ ' - ' +${#strings.abbreviate(atendimento.cliente.pessoa.email, 50)}"></span>
+            <span th:text="'Cliente: '+${#strings.abbreviate(atendimento.cliente.pessoa.nome, 50)}+ ' - ' +${#strings.abbreviate(atendimento.cliente.pessoa.email, 50)}"></span>
           </h6>
           <span class="card-text">
             <p th:text="'Horário: '+${#dates.format(atendimento.horarioAtendimento.horarioInicio, 'dd/MM/yyyy HH:mm')} + '-' +${#dates.format(atendimento.horarioAtendimento.horarioFim, 'HH:mm')}"></p>
-          	<p th:text="'Preço: '+${atendimento.horarioAtendimento.precoToString()}"></p>
+          	<p th:text="'Taxa de reserva: '+${atendimento.horarioAtendimento.precoToString()}"></p>
           </span>
         </div>
       </div>

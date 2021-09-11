@@ -1,6 +1,6 @@
 package br.ufrn.PDSgrupo5.controller;
 
-import br.ufrn.PDSgrupo5.extensions.model.ProfissionalSaude;
+import br.ufrn.PDSgrupo5.extensions.model.Restaurante;
 import br.ufrn.PDSgrupo5.framework.enumeration.EnumTipoPapel;
 import br.ufrn.PDSgrupo5.framework.exception.AcessoNegadoException;
 import br.ufrn.PDSgrupo5.framework.exception.ValidacaoException;
@@ -63,7 +63,7 @@ public class HomeController {
             model.addAttribute("cliente",new Cliente());
         }
         if(!model.containsAttribute("profissional")){
-        	Profissional p = new ProfissionalSaude(); 
+        	Profissional p = new Restaurante(); 
             model.addAttribute("profissional", p);
         }
 
@@ -99,19 +99,17 @@ public class HomeController {
     }
 
     @PostMapping("/novo-profissional/salvar")
-    public String novoProfissionalSaude(@Valid ProfissionalSaude profissionalSaude, BindingResult br, RedirectAttributes ra){
+    public String novoProfissional(@Valid Restaurante restaurante, BindingResult br, RedirectAttributes ra){
         
-//    	Profissional p = profissionalSaude;
-    	
     	try{
-            profissionalService.inserirProfissional(profissionalSaude, br);
+            profissionalService.inserirProfissional(restaurante, br);
             ra.addFlashAttribute("active_tab",null);
         }catch(AcessoNegadoException ne){
             return "error/401.html";//usuário não tem permissão para edição
         }catch(ValidacaoException validacaoException){
             ra.addFlashAttribute("org.springframework.validation.BindingResult.profissional", validacaoException.getBindingResult());
-            ra.addFlashAttribute("message", "Erro ao salvar profissional da saúde");
-            ra.addFlashAttribute("profissional", profissionalSaude);
+            ra.addFlashAttribute("message", "Erro ao salvar restaurante");
+            ra.addFlashAttribute("profissional", restaurante);
             ra.addFlashAttribute("active_tab", "profissional");
         }
 
