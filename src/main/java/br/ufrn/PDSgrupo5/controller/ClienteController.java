@@ -17,7 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("paciente")
+@RequestMapping("cliente")
 public class ClienteController {
     private ClienteService clienteService;
     private ProfissionalService profissionalService;
@@ -41,20 +41,20 @@ public class ClienteController {
         if(!model.containsAttribute("cliente")){
             model.addAttribute(new Cliente());
         }
-        return "paciente/form";
+        return "cliente/form";
     }
 
     @PostMapping("/salvar")
-    public String salvar(@Valid Cliente paciente, BindingResult br, Model model){
+    public String salvar(@Valid Cliente cliente, BindingResult br, Model model){
 
         try{
-            paciente = clienteService.verificarEdicao(paciente);
-            clienteService.validarCliente(paciente, br);
+            cliente = clienteService.verificarEdicao(cliente);
+            clienteService.validarCliente(cliente, br);
 
-            clienteService.salvarCliente(paciente);
+            clienteService.salvarCliente(cliente);
         }catch(ValidacaoException validacaoException){
-            model.addAttribute("message", "Erro ao salvar paciente");
-            model.addAttribute(paciente);
+            model.addAttribute("message", "Erro ao salvar cliente");
+            model.addAttribute(cliente);
             return form(model);
         }
 
@@ -65,7 +65,7 @@ public class ClienteController {
     @GetMapping("/editar")
     public String editar(Model model){
         model.addAttribute(clienteService.buscarClientePorUsuarioLogado());
-        return "paciente/form";
+        return "cliente/form";
     }
 
     @GetMapping("/perfil")
@@ -89,7 +89,7 @@ public class ClienteController {
     	model.addAttribute("horariosAtendimento", profissionalService.buscarHorariosAtendimentoLivres(id));
     	model.addAttribute("atendimento", new Atendimento());
     	
-    	return "paciente/formAtendimento";
+    	return "cliente/formAtendimento";
     }
     
     @PostMapping("/agendarAtendimento")

@@ -10,7 +10,7 @@
     <th:block layout:fragment="content">
         <div class="pacienteForm container-fluid">
             <h2 class="text-secondary mt-4 mb-4 text-center">Editar Paciente</h2>
-            <form class="ml-md-5 mr-md-5 mb-5" method="POST" th:object="${cliente}" th:action="@{/paciente/salvar}">
+            <form class="ml-md-5 mr-md-5 mb-5" method="POST" th:object="${cliente}" th:action="@{/cliente/salvar}">
 
                 <div th:if="${message}" class="alert alert-danger alert-dismissible fade show" role="alert">
                     [[${message}]]
@@ -25,7 +25,7 @@
 
                 <div class="form-row">
                     <div class="form-group col-md-4">
-                        <label for="nomePacienteInput">Nome do Paciente</label> <input
+                        <label for="nomePacienteInput">Nome</label> <input
                             class="form-control" id="nomePacienteInput" type="text"
                             th:field="*{pessoa.nome}" required="required"/>
                         <div style="color: red;">

@@ -1,4 +1,4 @@
-package br.ufrn.PDSgrupo5.framework.config;
+package br.ufrn.PDSgrupo5.config;
 
 import br.ufrn.PDSgrupo5.framework.enumeration.EnumTipoPapel;
 import br.ufrn.PDSgrupo5.framework.handler.AutenticacaoSucessoHandler;
@@ -25,10 +25,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         secureLogin(http);
         http.authorizeRequests()
                 .antMatchers("/index").permitAll()
-                .antMatchers("/novo-paciente/salvar").permitAll()
+                .antMatchers("/novo-cliente/salvar").permitAll()
                 .antMatchers("/novo-profissional/salvar").permitAll()
-                .antMatchers("/paciente/**").hasAuthority(EnumTipoPapel.CLIENTE.getDescricao())
-                .antMatchers("/profissional-saude/**").hasAuthority(EnumTipoPapel.PROFISSIONAL.getDescricao())
+                .antMatchers("/cliente/**").hasAuthority(EnumTipoPapel.CLIENTE.getDescricao())
+                .antMatchers("/profissional/**").hasAuthority(EnumTipoPapel.PROFISSIONAL.getDescricao())
                 .antMatchers("/validador/**").hasAuthority(EnumTipoPapel.VALIDADOR.getDescricao())
                 .anyRequest().authenticated();
     }

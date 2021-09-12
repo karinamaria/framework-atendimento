@@ -108,7 +108,7 @@
                 <div class="pacienteForm"
                      th:styleappend="${active_tab} != null and ${active_tab} != 'cliente' ? 'display: none;': 'display:block;'">
                     <form class="ml-md-5 mr-md-5 mb-5" method="POST" th:object="${cliente}"
-                          th:action="@{/novo-paciente/salvar}">
+                          th:action="@{/novo-cliente/salvar}">
 
                         <div th:if="${message}" class="alert alert-danger alert-dismissible fade show" role="alert">
                             [[${message}]]
@@ -123,7 +123,7 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-4">
-                                <label for="nomePacienteInput">Nome do Cliente</label> <input
+                                <label for="nomePacienteInput">Nome</label> <input
                                     class="form-control" id="nomePacienteInput" type="text"
                                     th:field="*{pessoa.nome}" required="required"/>
                                 <div style="color: red;">

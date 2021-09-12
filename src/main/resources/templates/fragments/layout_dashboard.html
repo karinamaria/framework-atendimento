@@ -85,7 +85,7 @@
 </th:block>
 
 
-<th:block th:fragment="pacienteDashboard">
+<th:block th:fragment="clienteDashboard">
 
   <div class="ml-md-5 mr-md-5 mb-5">
     <div class="form-row border-bottom my-5">
@@ -203,7 +203,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form class="container-fluid ml-md-5 mr-md-5 mb-5" method="POST"  th:action="@{/profissional-saude/aceitarRecusarAtendimento}">
+          <form class="container-fluid ml-md-5 mr-md-5 mb-5" method="POST"  th:action="@{/profissional/aceitarRecusarAtendimento}">
             <div class="form-row">
               <input type="hidden" name="atendimentoId" value=""/>
               <div class="form-group col-md-8">

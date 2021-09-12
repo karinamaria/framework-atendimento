@@ -11,7 +11,7 @@
 	<th:block layout:fragment="content">
         <div class="profissionalSaudeForm container-fluid">
             <h2 class="text-secondary mb-4 mt-4 text-center">EDITAR RESTAURANTE</h2>
-            <form class="ml-md-5 mr-md-5 mb-5" method="POST" th:object="${profissional}" th:action="@{/profissional-saude/salvar}">
+            <form class="ml-md-5 mr-md-5 mb-5" method="POST" th:object="${profissional}" th:action="@{/profissional/salvar}">
                 <div th:if="${message}" class="alert alert-danger alert-dismissible fade show" role="alert">
                     [[${message}]]
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">

@@ -79,7 +79,7 @@ public class HomeController {
         return "index";
     }
 
-    @PostMapping("/novo-paciente/salvar")
+    @PostMapping("/novo-cliente/salvar")
     public String novoPaciente(@Valid Cliente paciente, BindingResult br, RedirectAttributes ra){
         try{
             clienteService.verificarPermissao(paciente);
@@ -90,7 +90,7 @@ public class HomeController {
             return "error/401.html";//o usuário não tem permissão para editar outro candidato. Apresente página de erro
         }catch(ValidacaoException validacaoException){
             ra.addFlashAttribute("org.springframework.validation.BindingResult.cliente", validacaoException.getBindingResult());
-            ra.addFlashAttribute("message", "Erro ao salvar paciente");
+            ra.addFlashAttribute("message", "Erro ao salvar cliente");
             ra.addFlashAttribute("cliente", paciente);
             ra.addFlashAttribute("active_tab", "cliente");
         }

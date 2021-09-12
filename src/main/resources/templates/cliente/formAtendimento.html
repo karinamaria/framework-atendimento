@@ -59,7 +59,7 @@
 		        </button>
 		      </div>
 		      <div class="modal-body">
-				<form th:action="@{/paciente/agendarAtendimento}" method="post" th:object="${atendimento}">
+				<form th:action="@{/cliente/agendarAtendimento}" method="post" th:object="${atendimento}">
 					<input name="horarioAtendimentoId" type="hidden"/>
                     <input name="profissionalId" type="hidden"/>
                     

@@ -17,7 +17,7 @@ import javax.validation.Valid;
 import java.text.ParseException;
 
 @Controller
-@RequestMapping("profissional-saude")
+@RequestMapping("profissional")
 public class ProfissionalController {
 	private ProfissionalService profissionalService;
 	private AtendimentoService atendimentoService;
@@ -35,7 +35,7 @@ public class ProfissionalController {
 			model.addAttribute("profissional", new Restaurante());
 		}
 		
-		return "profissional-saude/form";
+		return "profissional/form";
 	}
 	
     @PostMapping("/salvar")
@@ -49,7 +49,7 @@ public class ProfissionalController {
 
             profissionalService.salvarProfissional(p);
         }catch (ValidacaoException validacaoException){
-            model.addAttribute("message", "Erro ao cadastrar profissional da saúde");
+            model.addAttribute("message", "Erro ao salvar restaurante");
             model.addAttribute(p);
             return form(model);
         }
@@ -60,7 +60,7 @@ public class ProfissionalController {
     @GetMapping("/editar")
     public String editar(Model model) {
         model.addAttribute("profissional", profissionalService.buscarProfissionalPorUsuarioLogado());
-        return "profissional-saude/form";
+        return "profissional/form";
     }
 
     //usuário com papel "validador" pode editar qualquer profissional da saúde
@@ -94,7 +94,7 @@ public class ProfissionalController {
     public String horariosAtendimento(Model model) {
     	Profissional ps = profissionalService.buscarProfissionalPorUsuarioLogado();
     	model.addAttribute("horariosAtendimento", ps.getHorarioAtendimento());
-    	return "profissional-saude/horariosAtendimento";
+    	return "profissional/horariosAtendimento";
     }
     
     @PostMapping("/addHorarioAtendimento")
@@ -113,14 +113,14 @@ public class ProfissionalController {
             return horariosAtendimento(model);
         }
     	
-    	return "redirect:/profissional-saude/horariosAtendimento";
+    	return "redirect:/profissional/horariosAtendimento";
     }
 
     @GetMapping("/excluirHorarioAtendimento")
     public String excluirHorarioAtendimento(@RequestParam("idHorarioAtendimento") Long idHorarioAtendimento){
         profissionalService.excluirHorarioAtendimento(idHorarioAtendimento);
 
-        return "redirect:/profissional-saude/horariosAtendimento";
+        return "redirect:/profissional/horariosAtendimento";
     }
 
     @PostMapping("/aceitarRecusarAtendimento")

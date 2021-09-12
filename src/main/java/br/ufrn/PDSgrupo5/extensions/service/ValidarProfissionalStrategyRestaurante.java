@@ -2,6 +2,7 @@ package br.ufrn.PDSgrupo5.extensions.service;
 
 import br.ufrn.PDSgrupo5.extensions.model.Restaurante;
 import br.ufrn.PDSgrupo5.extensions.repository.RestauranteRepository;
+import br.ufrn.PDSgrupo5.framework.model.Pessoa;
 import br.ufrn.PDSgrupo5.framework.model.Profissional;
 import br.ufrn.PDSgrupo5.framework.service.PessoaService;
 import br.ufrn.PDSgrupo5.framework.strategy.ValidarProfissionalStrategy;
@@ -30,16 +31,16 @@ public class ValidarProfissionalStrategyRestaurante implements ValidarProfission
 			br.rejectValue("pessoa.cpfOuCnpj", "", "CNPJ inválido");
 		}
 		
-		Restaurante rAux = restauranteRepository.buscarRestaurantePorCnpj(p.getPessoa().getCpfOuCnpj());
-		if(Objects.nonNull(rAux)) {
-			if(rAux.getId() != restaurante.getPessoa().getId()) {
-				br.rejectValue("pessoa.cpfOuCnpj", "", "CNPJ já pertence a outro estabelecimento");
+		Pessoa pessoa = pessoaService.buscarPessoaPorCpf(p.getPessoa().getCpfOuCnpj());
+		if(Objects.nonNull(pessoa)) {
+			if(pessoa.getId() != restaurante.getPessoa().getId()) {
+				br.rejectValue("pessoa.cpfOuCnpj", "", "CNPJ já pertence a outro usuário");
 			}
 		}
 		
-	    Restaurante r = restauranteRepository.buscarRestaurantePorNome(restaurante.getPessoa().getNome());
-		if(Objects.nonNull(r)) {
-			if(r.getId() != restaurante.getId()) {
+	    Restaurante rAux = restauranteRepository.buscarRestaurantePorNome(restaurante.getPessoa().getNome());
+		if(Objects.nonNull(rAux)) {
+			if(rAux.getId() != restaurante.getId()) {
 				br.rejectValue("pessoa.nome", "", "Já existe um estabelecimento com esse nome cadastrado no sistema");
 			}
 		}

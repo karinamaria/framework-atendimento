@@ -48,8 +48,8 @@
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
                    aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" th:if="${isCliente}" th:href="@{/paciente/editar}">Editar</a></li>
-                    <li><a class="dropdown-item" th:if="${isProfissional}" th:href="@{/profissional-saude/editar}">Editar</a></li>
+                    <li><a class="dropdown-item" th:if="${isCliente}" th:href="@{/cliente/editar}">Editar</a></li>
+                    <li><a class="dropdown-item" th:if="${isProfissional}" th:href="@{/profissional/editar}">Editar</a></li>
                     <li>
                         <form id="form-logout" th:action="@{/logout}" method="post" style="display:inline">
                             <a class="dropdown-item" href='#' onclick="document.getElementById('form-logout').submit()">
@@ -70,7 +70,7 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
-                        <a class="nav-link" th:href="@{/profissional-saude/horariosAtendimento}" th:if="${isProfissional}">
+                        <a class="nav-link" th:href="@{/profissional/horariosAtendimento}" th:if="${isProfissional}">
                             <div class="sb-nav-link-icon"><i class="fa fa-calendar"></i></div>
                             Horários atendimento
                         </a>
