@@ -16,7 +16,7 @@ public class ValidarHorarioAtendimentoStrategySalao implements VagasHorarioAtend
     private static final String ATENDIMENTO_EM_DOMICILO = "em domicilio";
     private static final String ATENDIMENTO_NO_SALAO = "no salão";
     private static final int RESTA_APENAS_UMA_VAGA  = 1;
-    private static final int NENHUMA_VAGA = 0;
+    private static final int NAO_EH_POSSIVEL_AGENDAR = 0;
 
     public ValidarHorarioAtendimentoStrategySalao(AtendimentoRepository atendimentoRepository) {
         this.atendimentoRepository = atendimentoRepository;
@@ -49,25 +49,26 @@ public class ValidarHorarioAtendimentoStrategySalao implements VagasHorarioAtend
     private Integer calcularVagas(Integer qtdAtendimentosAgendadosDomicilio, Integer qtdAtendimentosAgendadosSalao, Atendimento atendimento) {
         Salao salao = (Salao) atendimento.getProfissional();
 
-        Integer quantidadeVagasRestantes;
+        Integer vagasSomenteSalao = (salao.getQntTotalFuncionarios() - salao.getQntFuncionariosAtendemDomicilio());
+        Integer quantidadeVagasRestante = null;
         if(atendimento.getTipoAtendimento().equalsIgnoreCase(ATENDIMENTO_EM_DOMICILO)){
-            if(++qtdAtendimentosAgendadosDomicilio < salao.getQntFuncionariosAtendemDomicilio()){
-                quantidadeVagasRestantes = ((qtdAtendimentosAgendadosDomicilio + qtdAtendimentosAgendadosSalao) - salao.getQntTotalFuncionarios());
-            }
-            else if(qtdAtendimentosAgendadosDomicilio == salao.getQntFuncionariosAtendemDomicilio()){
-                quantidadeVagasRestantes = RESTA_APENAS_UMA_VAGA;
-            }else{
-                quantidadeVagasRestantes = NENHUMA_VAGA;
+            if(++qtdAtendimentosAgendadosDomicilio > salao.getQntFuncionariosAtendemDomicilio()){
+                quantidadeVagasRestante = NAO_EH_POSSIVEL_AGENDAR;
             }
         }else{
-            if(++qtdAtendimentosAgendadosSalao < (salao.getQntTotalFuncionarios() - salao.getQntFuncionariosAtendemDomicilio())){
-                quantidadeVagasRestantes = ((qtdAtendimentosAgendadosSalao + qtdAtendimentosAgendadosDomicilio) - salao.getQntTotalFuncionarios());
-            }else if(qtdAtendimentosAgendadosSalao == (salao.getQntTotalFuncionarios() - salao.getQntFuncionariosAtendemDomicilio())){
-                quantidadeVagasRestantes = RESTA_APENAS_UMA_VAGA;
-            }else{
-                quantidadeVagasRestantes = NENHUMA_VAGA;
+            if(++qtdAtendimentosAgendadosSalao > vagasSomenteSalao){
+                quantidadeVagasRestante = NAO_EH_POSSIVEL_AGENDAR;
             }
         }
-        return quantidadeVagasRestantes;
+
+        if(Objects.isNull(quantidadeVagasRestante)){
+            if(qtdAtendimentosAgendadosDomicilio == salao.getQntFuncionariosAtendemDomicilio() &&
+                qtdAtendimentosAgendadosSalao == vagasSomenteSalao){
+                quantidadeVagasRestante = RESTA_APENAS_UMA_VAGA;
+            }else{
+                quantidadeVagasRestante = (salao.getQntTotalFuncionarios() - (qtdAtendimentosAgendadosDomicilio + qtdAtendimentosAgendadosSalao));
+            }
+        }
+        return quantidadeVagasRestante;
     }
 }
