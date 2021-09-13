@@ -18,6 +18,8 @@ import java.util.List;
 public class HorarioAtendimentoService {
 	private HorarioAtendimentoRepository horarioAtendimentoRepository;
 	private final VagasHorarioAtendimentoStrategy validarHorarioAtendimentoStrategy;
+	private static final int ULTIMA_VAGA  = 1;
+	private static final int NAO_EH_POSSIVEL_AGENDAR = 0;
 	
 	@Autowired
 	public HorarioAtendimentoService(HorarioAtendimentoRepository horarioAtendimentoRepository,
@@ -99,10 +101,10 @@ public class HorarioAtendimentoService {
 	public HorarioAtendimento ocuparVaga(Atendimento atendimento) throws ValidacaoException {
 		int quantidadeVagas = validarHorarioAtendimentoStrategy.calcularVagasHorarioAtendimento(atendimento);
 
-		if(quantidadeVagas == 0){
+		if(quantidadeVagas == NAO_EH_POSSIVEL_AGENDAR){
 			throw new ValidacaoException("Não há mais vagas para esse horário de atendimento. Por favor, escolha outro.");
 		}
-		if(quantidadeVagas == 1){
+		if(quantidadeVagas == ULTIMA_VAGA){
 			atendimento.getHorarioAtendimento().setLivre(false);
 		}
 		return atendimento.getHorarioAtendimento();

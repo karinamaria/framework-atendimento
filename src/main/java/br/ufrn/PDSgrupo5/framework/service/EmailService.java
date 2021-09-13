@@ -39,7 +39,7 @@ public class EmailService {
 	}
 	
 	//@Scheduled(cron = "0 0 12 * * *", zone = TIME_ZONE)
-	@Scheduled(cron = "* * * * * *", zone = TIME_ZONE) //a cada um minuto para teste
+	//@Scheduled(cron = "* * * * * *", zone = TIME_ZONE) //a cada um minuto para teste
 	public void enviarNotificacoes() {
 		List<Atendimento> atendimentos = atendimentoService.buscarAtendimentosRequeremNotificacao();
 		for(Atendimento a : atendimentos) {

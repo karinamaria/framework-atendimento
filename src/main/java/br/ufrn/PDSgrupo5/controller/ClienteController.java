@@ -94,15 +94,15 @@ public class ClienteController {
     
     @PostMapping("/agendarAtendimento")
     public String agendarAtendimento(@RequestParam("horarioAtendimentoId") Long idHorario, @RequestParam("profissionalId") Long idProfissional,
-                                     @Valid Atendimento atendimento, RedirectAttributes ra) {
+                                     @Valid Atendimento atendimento, Model model) {
     	try{
             
     		atendimento = atendimentoService.construirAtendimento(atendimento, idHorario, idProfissional);
             atendimentoService.agendarAtendimento(atendimento);
             
         }catch(ValidacaoException validacaoException){
-            ra.addFlashAttribute("message", validacaoException.getMessage());
-            ra.addFlashAttribute("atendimento",atendimento);
+            model.addAttribute("message", validacaoException.getMessage());
+            return visualizarProfissional(atendimento.getProfissional().getId(), model);
         }
 
     	return "redirect:/dashboard";

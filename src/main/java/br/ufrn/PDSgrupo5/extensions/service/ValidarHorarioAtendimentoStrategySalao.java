@@ -15,7 +15,7 @@ public class ValidarHorarioAtendimentoStrategySalao implements VagasHorarioAtend
 
     private static final String ATENDIMENTO_EM_DOMICILO = "em domicilio";
     private static final String ATENDIMENTO_NO_SALAO = "no salão";
-    private static final int RESTA_APENAS_UMA_VAGA  = 1;
+    private static final int ULTIMA_VAGA = 1;
     private static final int NAO_EH_POSSIVEL_AGENDAR = 0;
 
     public ValidarHorarioAtendimentoStrategySalao(AtendimentoRepository atendimentoRepository) {
@@ -29,7 +29,8 @@ public class ValidarHorarioAtendimentoStrategySalao implements VagasHorarioAtend
 
         if(atendimentos.isEmpty()){
             Salao salao = (Salao) atendimento.getProfissional();
-            return salao.getQntTotalFuncionarios();
+            return atendimento.getTipoAtendimento().equalsIgnoreCase(ATENDIMENTO_EM_DOMICILO) ? salao.getQntFuncionariosAtendemDomicilio() :
+                    salao.getQntTotalFuncionarios()-salao.getQntFuncionariosAtendemDomicilio();
         }
 
         Long qtdAtendimentosAgendadosDomicilio = atendimentos.stream()
@@ -51,8 +52,10 @@ public class ValidarHorarioAtendimentoStrategySalao implements VagasHorarioAtend
 
         Integer vagasSomenteSalao = (salao.getQntTotalFuncionarios() - salao.getQntFuncionariosAtendemDomicilio());
         Integer quantidadeVagasRestante = null;
+
         if(atendimento.getTipoAtendimento().equalsIgnoreCase(ATENDIMENTO_EM_DOMICILO)){
-            if(++qtdAtendimentosAgendadosDomicilio > salao.getQntFuncionariosAtendemDomicilio()){
+            if(++qtdAtendimentosAgendadosDomicilio > salao.getQntFuncionariosAtendemDomicilio()
+                || salao.getQntFuncionariosAtendemDomicilio() == 0){
                 quantidadeVagasRestante = NAO_EH_POSSIVEL_AGENDAR;
             }
         }else{
@@ -64,7 +67,7 @@ public class ValidarHorarioAtendimentoStrategySalao implements VagasHorarioAtend
         if(Objects.isNull(quantidadeVagasRestante)){
             if(qtdAtendimentosAgendadosDomicilio == salao.getQntFuncionariosAtendemDomicilio() &&
                 qtdAtendimentosAgendadosSalao == vagasSomenteSalao){
-                quantidadeVagasRestante = RESTA_APENAS_UMA_VAGA;
+                quantidadeVagasRestante = ULTIMA_VAGA;
             }else{
                 quantidadeVagasRestante = (salao.getQntTotalFuncionarios() - (qtdAtendimentosAgendadosDomicilio + qtdAtendimentosAgendadosSalao));
             }
