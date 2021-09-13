@@ -1,4 +1,4 @@
-package br.ufrn.PDSgrupo5.framework.config;
+package br.ufrn.PDSgrupo5.config;
 
 import br.ufrn.PDSgrupo5.framework.enumeration.EnumTipoPapel;
 import br.ufrn.PDSgrupo5.framework.handler.AutenticacaoSucessoHandler;

@@ -8,7 +8,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ValidarHorarioAtendimentoStrategyProfissionalSaude implements VagasHorarioAtendimentoStrategy {
-    private final HorarioAtendimentoRepository horarioAtendimentoRepository;
+    private static final int NAO_EH_POSSIVEL_AGENDAR = 0;
+    private static final int ULTIMA_VAGA = 1;
+	
+	private final HorarioAtendimentoRepository horarioAtendimentoRepository;
     
     public ValidarHorarioAtendimentoStrategyProfissionalSaude(HorarioAtendimentoRepository horarioAtendimentoRepository){
         this.horarioAtendimentoRepository = horarioAtendimentoRepository;
@@ -16,10 +19,10 @@ public class ValidarHorarioAtendimentoStrategyProfissionalSaude implements Vagas
 
     @Override
     public int calcularVagasHorarioAtendimento(Atendimento atendimento) {
-        int quantidadeVagas = 0;
+        int quantidadeVagas = NAO_EH_POSSIVEL_AGENDAR;
         
         if(horarioAtendimentoRepository.getById(atendimento.getHorarioAtendimento().getId()).isLivre()){
-            quantidadeVagas=1;
+            quantidadeVagas = ULTIMA_VAGA;
         }
         return quantidadeVagas;
     }
