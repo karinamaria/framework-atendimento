@@ -109,7 +109,7 @@ public class HomeController {
             return "error/401.html";//usuário não tem permissão para edição
         }catch(ValidacaoException validacaoException){
             ra.addFlashAttribute("org.springframework.validation.BindingResult.profissional", validacaoException.getBindingResult());
-            ra.addFlashAttribute("message", "Erro ao salvar profissional da saúde");
+            ra.addFlashAttribute("message", "Erro ao salvar salão");
             ra.addFlashAttribute("profissional", salao);
             ra.addFlashAttribute("active_tab", "profissional");
         }

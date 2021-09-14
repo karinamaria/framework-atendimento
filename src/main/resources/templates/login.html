@@ -100,7 +100,7 @@
 
                 <nav class="nav nav-status justify-content-center pb-4">
                     <a id="showPacienteForm" class="nav-link form-tab"
-                       th:classappend="${active_tab} == null or ${active_tab} == 'cliente' ? 'active'" href="#">PACIENTE</a>
+                       th:classappend="${active_tab} == null or ${active_tab} == 'cliente' ? 'active'" href="#">CLIENTE</a>
                     <a id="showProfissionalForm" class="nav-link form-tab"
                        th:classappend="${active_tab} != null and ${active_tab} == 'profissional' ? 'active'" href="#">PROFISSIONAL</a>
                 </nav>
@@ -123,7 +123,7 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-4">
-                                <label for="nomePacienteInput">Nome do Paciente</label> <input
+                                <label for="nomePacienteInput">Nome do Cliente</label> <input
                                     class="form-control" id="nomePacienteInput" type="text"
                                     th:field="*{pessoa.nome}" required="required"/>
                                 <div style="color: red;">
@@ -269,9 +269,9 @@
                                 </div>
                             </div>
                             <div class="form-group col-md-4">
-                                <label for="cpfInput">CPF</label> <input class="form-control"
+                                <label for="cpfInput">CNPJ</label> <input class="form-control"
                                                                          id="cpfInput" type="text" th:field="*{pessoa.cpfOuCnpj}"
-                                                                         data-mask="000.000.000-00" data-mask-reverse="true"
+                                                                         data-mask="00.000.000/0000-00" data-mask-reverse="true"
                                                                          required="required" />
                                 <div style="color: red;">
                                     <div th:if="${#fields.hasErrors('pessoa.cpfOuCnpj')}"
