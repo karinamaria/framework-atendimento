@@ -25,22 +25,20 @@ public class ValidarProfissionalStrategyRestaurante implements ValidarProfission
 	
 	@Override
 	public BindingResult validarProfissional(Profissional p, BindingResult br) {
-		Restaurante restaurante = (Restaurante) p;
-
 		if(!pessoaService.ehCpfOuCnpjValido(p.getPessoa().getCpfOuCnpj())) {
 			br.rejectValue("pessoa.cpfOuCnpj", "", "CNPJ inválido");
 		}
 		
 		Pessoa pessoa = pessoaService.buscarPessoaPorCpf(p.getPessoa().getCpfOuCnpj());
 		if(Objects.nonNull(pessoa)) {
-			if(pessoa.getId() != restaurante.getPessoa().getId()) {
+			if(pessoa.getId() != p.getPessoa().getId()) {
 				br.rejectValue("pessoa.cpfOuCnpj", "", "CNPJ já pertence a outro usuário");
 			}
 		}
 		
-	    Restaurante rAux = restauranteRepository.buscarRestaurantePorNome(restaurante.getPessoa().getNome());
+	    Restaurante rAux = restauranteRepository.buscarRestaurantePorNome(p.getPessoa().getNome());
 		if(Objects.nonNull(rAux)) {
-			if(rAux.getId() != restaurante.getId()) {
+			if(rAux.getId() != p.getId()) {
 				br.rejectValue("pessoa.nome", "", "Já existe um estabelecimento com esse nome cadastrado no sistema");
 			}
 		}
