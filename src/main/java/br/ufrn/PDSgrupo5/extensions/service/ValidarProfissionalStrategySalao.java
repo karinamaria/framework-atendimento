@@ -33,12 +33,12 @@ public class ValidarProfissionalStrategySalao implements ValidarProfissionalStra
             }
         }
 
-        if(salao.getQntFuncionariosAtendemDomicilio() < 0){
+        if(salao.getQntTotalFuncionarios() < 0){
             br.rejectValue("qntTotalFuncionarios", "",
                     "Por favor, informe uma quantidade válida de funcionários");
         }
         if(salao.getQntFuncionariosAtendemDomicilio() < 0){
-            br.rejectValue("qntTotalFuncionarios", "",
+            br.rejectValue("qntFuncionariosAtendemDomicilio", "",
                     "Por favor, informe uma quantidade válida de funcionários que atendem" +
                             "a domícilio");
         }
